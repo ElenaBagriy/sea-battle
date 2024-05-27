@@ -104,8 +104,6 @@ class Board {
     const row = parseInt(target.getAttribute("data-row"));
     const col = parseInt(target.getAttribute("data-col"));
 
-    // Обрабатываем клики на ячейки поля игрока
-    // Например, вызываем метод для выстрела по этой ячейке и обновляем интерфейс игры
     console.log(row, col);
   }
 }
@@ -128,7 +126,7 @@ class Game {
       this.enemyBoardElement
     );
 
-    this.enemyBoard.addClickListener(); // Добавляем слушатель событий только для поля игрока
+    this.enemyBoard.addClickListener();
   }
 }
 
