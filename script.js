@@ -3,7 +3,6 @@ const enemyBoardElement = document.querySelector(".enemy-board");
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
-const cells = Array(fieldSize);
 
 // Cell constructor
 class Cell {
@@ -24,16 +23,20 @@ class Cell {
 
 // Board constructor
 class Board {
-  constructor() {
-    this.cells = Array.from({ length: fieldSize }, () =>
-      Array.from({ length: fieldSize }, () => new Cell())
+  constructor(shipLengths, fieldSize, fieldElement) {
+    this.fieldSize = fieldSize;
+    this.cells = Array.from({ length: this.fieldSize }, () =>
+      Array.from({ length: this.fieldSize }, () => new Cell())
     );
+    this.placeShips(shipLengths);
+    this.field = fieldElement;
+    this.render();
   }
 
   markNeighborCells(row, col) {
     for (let r = row - 1; r <= row + 1; r++) {
       for (let c = col - 1; c <= col + 1; c++) {
-        if (r >= 0 && r < fieldSize && c >= 0 && c < fieldSize) {
+        if (r >= 0 && r < this.fieldSize && c >= 0 && c < this.fieldSize) {
           this.cells[r][c].markNeighbor();
         }
       }
@@ -50,10 +53,10 @@ class Board {
 
         const isHorizontal = Math.random() > 0.5;
         let startRow = Math.floor(
-          Math.random() * (fieldSize - (isHorizontal ? 0 : length))
+          Math.random() * (this.fieldSize - (isHorizontal ? 0 : length))
         );
         let startCol = Math.floor(
-          Math.random() * (fieldSize - (isHorizontal ? length : 0))
+          Math.random() * (this.fieldSize - (isHorizontal ? length : 0))
         );
 
         for (let i = 0; i < length; i++) {
@@ -78,43 +81,56 @@ class Board {
     }
   }
 
-  render(field, isPlayerBoard) {
+  render() {
     let html = "";
-    for (let row = 0; row < fieldSize; row++) {
+    for (let row = 0; row < this.fieldSize; row++) {
       html += '<div class="row">';
-      for (let col = 0; col < fieldSize; col++) {
+      for (let col = 0; col < this.fieldSize; col++) {
         let cssClass = this.cells[row][col].isShip ? "cell hit" : "cell";
 
         html += `<div class='${cssClass}' data-row="${row}" data-col="${col}" ></div>`;
       }
       html += "</div>";
     }
-    field.insertAdjacentHTML("beforeend", html);
+    this.field.insertAdjacentHTML("beforeend", html);
+  }
+
+  addClickListener() {
+    this.field.addEventListener("click", this.handleCellClick.bind(this));
+  }
+
+  handleCellClick(event) {
+    const target = event.target;
+    const row = parseInt(target.getAttribute("data-row"));
+    const col = parseInt(target.getAttribute("data-col"));
+
+    // Обрабатываем клики на ячейки поля игрока
+    // Например, вызываем метод для выстрела по этой ячейке и обновляем интерфейс игры
+    console.log(row, col);
   }
 }
 
-// "Render" the game.
-function render(field) {
-  let html = "";
+class Game {
+  constructor(shipLengths, fieldSize) {
+    this.fieldSize = fieldSize;
+    this.shipLengths = shipLengths;
+    this.playerBoardElement = document.querySelector(".player-board");
+    this.enemyBoardElement = document.querySelector(".enemy-board");
 
-  for (let row = 0; row < fieldSize; row++) {
-    html += '<div class="row">';
-    for (let col = 0; col < fieldSize; col++) {
-      let cssClass = cells[row][col].isShip ? "cell hit" : "cell";
+    this.playerBoard = new Board(
+      this.shipLengths,
+      this.fieldSize,
+      this.playerBoardElement
+    );
+    this.enemyBoard = new Board(
+      this.shipLengths,
+      this.fieldSize,
+      this.enemyBoardElement
+    );
 
-      html += `<div class='${cssClass}' index="${row}${col}" ></div>`;
-    }
-    html += "</div>";
+    this.enemyBoard.addClickListener(); // Добавляем слушатель событий только для поля игрока
   }
-  field.insertAdjacentHTML("beforeend", html);
 }
 
-// Initialize player and enemy boards
-const playerBoard = new Board();
-const enemyBoard = new Board();
-
-playerBoard.placeShips(shipLengths);
-enemyBoard.placeShips(shipLengths);
-
-playerBoard.render(playerBoardElement, true);
-enemyBoard.render(enemyBoardElement, false);
+// Initialize game.
+const newGame = new Game(shipLengths, fieldSize);
