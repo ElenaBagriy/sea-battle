@@ -57,3 +57,11 @@ a {
 .cell.miss {
   background-color: gray;
 }
+
+.hide {
+  background-color: rgb(89, 176, 62);
+}
+
+.ship {
+  background-color: rgb(61, 43, 193);
+}
