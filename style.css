@@ -59,6 +59,9 @@ h2{
   cursor: pointer;
 }
 
+.cell.hide {
+  background-color: rgb(198, 203, 205);
+}
 .cell.hit {
   background-color: red;
 }
@@ -67,10 +70,6 @@ h2{
   background-color: gray;
 }
 
-.hide {
-  background-color: rgb(89, 176, 62);
-}
-
-.ship {
+.cell.ship {
   background-color: rgb(61, 43, 193);
 }
