@@ -11,13 +11,13 @@ class Ship {
       ? "human"
       : "computer";
     this.field = element;
-    this.shipname = ""; // Уникальное имя корабля
+    this.shipname = ""; // name
     this.length = length;
     this.startRow = row;
     this.startCol = col;
     this.direction = direction;
     this.isDestroyed = false;
-    this.hits = 0; // Счётчик попаданий
+    this.hits = 0;
     this.hitsCoords = [];
     this.shipCoords = [];
     this.safetyCells = [];
@@ -60,17 +60,20 @@ class Ship {
   }
 
   isHit(row, col) {
+    let isHit = false;
     this.shipCoords.some((item) => {
       if (item.row === row && item.col === col) {
         this.hitsCoords.push({ row, col });
         this.hits += 1;
+        isHit = true;
+        if (this.hits === this.length) {
+          this.isDestroyed = true;
+        }
         console.log("piu");
+        return true;
       }
     });
-  }
-
-  isDestroyed() {
-    return this.hits === this.length;
+    return isHit;
   }
 }
 
@@ -143,19 +146,6 @@ class Board {
 
         if (this.element.classList.contains("enemy-board")) {
           cssClass = "cell";
-
-          this.ships.map((ship) => {
-            return ship.shipCoords.map((coord) => {
-              coord.row === row && coord.col === col && (cssClass += " hit");
-            });
-          });
-          //   this.cells[row][col].isShip &&
-          //     this.cells[row][col].discovered &&
-          //     (cssClass += " hit");
-          //   this.cells[row][col].discovered &&
-          //     !this.cells[row][col].isShip &&
-          //     (cssClass += " miss");
-          //   !this.cells[row][col].discovered && (cssClass += " hide");
         } else {
           cssClass = "cell";
           this.ships.map((ship) => {
@@ -206,74 +196,60 @@ class Game {
     const target = event.target;
     if (!target.classList.contains("cell")) return;
 
+    if (target.classList.contains("hit") || target.classList.contains("miss")) {
+      return;
+    }
     const row = parseInt(target.getAttribute("data-row"));
     const col = parseInt(target.getAttribute("data-col"));
 
     this.clickedCells.push({ row, col });
 
+    let isHit = false;
+
     this.enemyBoard.ships.some((ship) => {
-      ship.isHit(row, col);
+      if (ship.isHit(row, col)) {
+        isHit = true;
+        target.classList.add("hit");
+        if (ship.isDestroyed) {
+          console.log("The ship is destroyed!");
+          //   this.markSafetyCells(ship);
+        }
+        return true;
+      }
     });
 
-    // if (this.enemyBoard.cells[row][col].discovered) return;
-    // this.enemyBoard.cells[row][col].discovered = true;
-    // this.enemyBoard.render();
-    // if (this.enemyBoard.cells[row][col].isShip) {
-    //   //   this.checkNeighbourCells(row, col, this.enemyBoard);
-    //   this.enemyBoard.render();
-    // }
-    //   }
-
-    //   checkNeighbourCells(row, col, field) {
-    //     let possibleMoves = [];
-    //     let shipDestroyed = true;
-
-    //     //   Check all neighbours
-    //     for (let r = row - 1; r <= row + 1; r++) {
-    //       for (let c = col - 1; c <= col + 1; c++) {
-    //         if (r === row && c === col) {
-    //           continue;
-    //         }
-
-    //         if (field.cells[r] && field.cells[r][c] && field.cells[r][c].isShip) {
-    //           shipDestroyed = false;
-    //           //   break;
-    //         } else {
-    //           shipDestroyed = true;
-    //         }
-
-    //         // set all diagonal cells = opened
-    //         if (r !== row && c !== col) {
-    //           field.cells[r] &&
-    //             field.cells[r][c] &&
-    //             (field.cells[r][c].discovered = true);
-    //         }
-    //       }
-    //     }
-
-    // if (shipDestroyed) {
-    //   console.log("Корабль полностью уничтожен!");
-    // } else {
-    //   console.log("Корабль еще не уничтожен, продолжайте стрелять...");
-    // }
+    if (!isHit) {
+      target.classList.add("miss");
+    }
   }
+
+  //   markSafetyCells(ship) {
+  //     ship.safetyCells.forEach((cell) => {
+  //       const isShipCell = ship.shipCoords.some(
+  //         (coord) => coord.row === cell.row && coord.col === cell.col
+  //       );
+
+  //       if (!isShipCell) {
+  //         const cellElement = this.enemyBoardElement.querySelector(
+  //           `.cell[data-row="${cell.row}"][data-col="${cell.col}"]`
+  //         );
+  //         if (cellElement) {
+  //           cellElement.classList.add("safety");
+  //         }
+  //       }
+  //     });
+  //   }
 }
 
 // Initialize game.
 const newGame = new Game(shipLengths, fieldSize);
 
-
 // Choosing user name
-let username = prompt('Enter your name');
-  if (prompt = false || username === null || username === '')
-    {
-      let usernamePlace = document.getElementById('username-place');
-      usernamePlace.innerHTML = "Player";
-    }  
-  else
-    {
-      let usernamePlace = document.getElementById('username-place');
-      usernamePlace.innerHTML = username;
-    }
-
-
+let username = prompt("Enter your name");
+if ((prompt = false || username === null || username === "")) {
+  let usernamePlace = document.getElementById("username-place");
+  usernamePlace.innerHTML = "Player";
+} else {
+  let usernamePlace = document.getElementById("username-place");
+  usernamePlace.innerHTML = username;
+}
