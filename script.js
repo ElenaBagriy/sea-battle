@@ -149,3 +149,19 @@ class Game {
 
 // Initialize game.
 const newGame = new Game(shipLengths, fieldSize);
+
+
+// Choosing user name
+let username = prompt('Enter your name');
+  if (prompt = false || username === null || username === '')
+    {
+      let usernamePlace = document.getElementById('username-place');
+      usernamePlace.innerHTML = "Player";
+    }  
+  else
+    {
+      let usernamePlace = document.getElementById('username-place');
+      usernamePlace.innerHTML = username;
+    }
+
+
