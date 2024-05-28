@@ -86,25 +86,18 @@ class Board {
     for (let row = 0; row < this.fieldSize; row++) {
       html += '<div class="row">';
       for (let col = 0; col < this.fieldSize; col++) {
-        let cssClass = this.cells[row][col].isShip ? "cell hit" : "cell";
+        let cssClass;
+        if (this.field.classList.contains("enemy-board")) {
+          cssClass = "cell hide";
+        } else {
+          cssClass = this.cells[row][col].isShip ? "cell hit" : "cell";
+        }
 
         html += `<div class='${cssClass}' data-row="${row}" data-col="${col}" ></div>`;
       }
       html += "</div>";
     }
     this.field.insertAdjacentHTML("beforeend", html);
-  }
-
-  addClickListener() {
-    this.field.addEventListener("click", this.handleCellClick.bind(this));
-  }
-
-  handleCellClick(event) {
-    const target = event.target;
-    const row = parseInt(target.getAttribute("data-row"));
-    const col = parseInt(target.getAttribute("data-col"));
-
-    console.log(row, col);
   }
 }
 
@@ -126,7 +119,31 @@ class Game {
       this.enemyBoardElement
     );
 
-    this.enemyBoard.addClickListener();
+    this.addClickListener(
+      this.enemyBoardElement,
+      this.handleCellClick.bind(this)
+    );
+  }
+  addClickListener(boardElement, handler) {
+    boardElement.addEventListener("click", handler);
+  }
+
+  handleCellClick(event) {
+    const target = event.target;
+    if (!target.classList.contains("cell")) return;
+
+    const row = parseInt(target.getAttribute("data-row"));
+    const col = parseInt(target.getAttribute("data-col"));
+
+    if (this.enemyBoard.cells[row][col].discovered) return;
+
+    this.enemyBoard.cells[row][col].discovered = true;
+    target.classList.remove("hide");
+    if (this.enemyBoard.cells[row][col].isShip) {
+      target.classList.add("hit");
+    } else {
+      target.classList.add("miss");
+    }
   }
 }
 
