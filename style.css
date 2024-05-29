@@ -84,16 +84,16 @@ section {
 .cell.hide {
   background-color: rgb(198, 203, 205);
 }
+
+.cell.ship {
+  background-color: #6495ed;
+}
 .cell.hit {
   background-color: red;
 }
 
 .cell.miss {
   background-color: gray;
-}
-
-.cell.ship {
-  background-color: #6495ed;
 }
 .cell:hover {
   cursor: pointer;
