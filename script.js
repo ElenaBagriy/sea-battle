@@ -1,6 +1,7 @@
 const playerBoardElement = document.querySelector(".player-board");
 const enemyBoardElement = document.querySelector(".enemy-board");
 const randomPlacingButton = document.getElementById("randomPlacingButton");
+const currentTurn = document.getElementById("current-turn");
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
@@ -251,6 +252,7 @@ class Game {
     if (!isHit) {
       target.classList.add("miss");
       this.playerTurn = false; // Switch turn to computer
+      currentTurn.innerHTML = "Computer turn!";
       setTimeout(() => this.computerMove(), 1000);
     }
   }
@@ -269,8 +271,6 @@ class Game {
 
   computerMove() {
     let availableCells = [];
-    let currentTurn = document.getElementById("current-turn");
-    currentTurn.innerHTML = "Computer turn!";
 
     // Collect all available cells
     for (let row = 0; row < this.fieldSize; row++) {
@@ -300,26 +300,19 @@ class Game {
 
     this.playerBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
+        let n = 1;
+
         isHit = true;
         target.classList.add("hit");
 
         if (ship.isDestroyed) {
-          console.log("Your ship is destroyed!", row, col);
-          console.log(ship.safetyCells);
-          ship.safetyCells.map((safeCell) => {
-            const cell = this.playerBoardElement.querySelector(
-              `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
-            );
-            if (
-              !cell.classList.contains("hit") &&
-              !cell.classList.contains("miss")
-            ) {
-              setTimeout(() => cell.classList.add("marked"), 2000);
-              return setTimeout(() => this.computerMove(), 1000);
-            }
+          this.markSafetyCells(ship).then(() => {
+            // Move only after all cells are marked
+            setTimeout(() => this.computerMove(), 1000);
           });
+        } else {
+          setTimeout(() => this.computerMove(), 1000);
         }
-        setTimeout(() => this.computerMove(), 1000);
         return true;
       }
     });
@@ -327,10 +320,44 @@ class Game {
     if (!isHit) {
       target.classList.add("miss");
       this.playerTurn = true;
-      setTimeout(function() {
-        currentTurn.innerHTML = 'Your turn!';
-      }, 600);
+      setTimeout(function () {
+        currentTurn.innerHTML = "Your turn!";
+      }, 200);
     }
+  }
+
+  markSafetyCells(ship) {
+    return new Promise((resolve) => {
+      let n = 1;
+
+      const safetyCells = ship.safetyCells.filter((safeCell) => {
+        const cell = this.playerBoardElement.querySelector(
+          `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
+        );
+        return (
+          !cell.classList.contains("hit") &&
+          !cell.classList.contains("miss") &&
+          !cell.classList.contains("marked")
+        );
+      });
+
+      safetyCells.forEach((safeCell, index) => {
+        const cell = this.playerBoardElement.querySelector(
+          `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
+        );
+        setTimeout(() => {
+          cell.classList.add("marked");
+          if (index === safetyCells.length - 1) {
+            resolve();
+          }
+        }, 250 * n);
+        n++;
+      });
+
+      if (safetyCells.length === 0) {
+        resolve();
+      }
+    });
   }
 }
 
@@ -342,8 +369,7 @@ let username = prompt("Enter your name");
 if ((prompt = false || username === null || username === "")) {
   let usernamePlace = document.getElementById("username-place");
   usernamePlace.innerHTML = "Player";
-  } 
-else {
+} else {
   let usernamePlace = document.getElementById("username-place");
   usernamePlace.innerHTML = username;
 }
