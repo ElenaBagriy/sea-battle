@@ -1,6 +1,6 @@
 const playerBoardElement = document.querySelector(".player-board");
 const enemyBoardElement = document.querySelector(".enemy-board");
-const randomPlacingButton = document.getElementById('randomPlacingButton');
+const randomPlacingButton = document.getElementById("randomPlacingButton");
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
@@ -139,7 +139,7 @@ class Board {
 
   clearBoard() {
     this.ships = [];
-    this.element.innerHTML = '';
+    this.element.innerHTML = "";
     this.render();
   }
 
@@ -201,7 +201,7 @@ class Game {
   }
 
   randomPlacing() {
-    randomPlacingButton.addEventListener('click', () => {
+    randomPlacingButton.addEventListener("click", () => {
       this.playerBoard.clearBoard();
       this.enemyBoard.clearBoard();
       this.playerBoard.initShips();
@@ -263,8 +263,6 @@ class Game {
     if (target.classList.contains("hit") || target.classList.contains("miss")) {
       return;
     }
-    const row = parseInt(target.getAttribute("data-row"));
-    const col = parseInt(target.getAttribute("data-col"));
 
     target.classList.add("marked");
   }
@@ -280,7 +278,8 @@ class Game {
         );
         if (
           !cell.classList.contains("hit") &&
-          !cell.classList.contains("miss")
+          !cell.classList.contains("miss") &&
+          !cell.classList.contains("marked")
         ) {
           availableCells.push(cell);
         }
@@ -301,8 +300,22 @@ class Game {
       if (ship.isHit(row, col)) {
         isHit = true;
         target.classList.add("hit");
+
         if (ship.isDestroyed) {
-          console.log("Your ship is destroyed!");
+          console.log("Your ship is destroyed!", row, col);
+          console.log(ship.safetyCells);
+          ship.safetyCells.map((safeCell) => {
+            const cell = this.playerBoardElement.querySelector(
+              `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
+            );
+            if (
+              !cell.classList.contains("hit") &&
+              !cell.classList.contains("miss")
+            ) {
+              setTimeout(() => cell.classList.add("marked"), 2000);
+              return setTimeout(() => this.computerMove(), 1000);
+            }
+          });
         }
         setTimeout(() => this.computerMove(), 1000);
         return true;
@@ -312,6 +325,9 @@ class Game {
     if (!isHit) {
       target.classList.add("miss");
       this.playerTurn = true;
+      setTimeout(function () {
+        currentTurn.innerHTML = "Your turn!";
+      }, 600);
     }
   }
 }
