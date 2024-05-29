@@ -269,6 +269,8 @@ class Game {
 
   computerMove() {
     let availableCells = [];
+    let currentTurn = document.getElementById("current-turn");
+    currentTurn.innerHTML = "Computer turn!";
 
     // Collect all available cells
     for (let row = 0; row < this.fieldSize; row++) {
@@ -325,8 +327,8 @@ class Game {
     if (!isHit) {
       target.classList.add("miss");
       this.playerTurn = true;
-      setTimeout(function () {
-        currentTurn.innerHTML = "Your turn!";
+      setTimeout(function() {
+        currentTurn.innerHTML = 'Your turn!';
       }, 600);
     }
   }
@@ -340,7 +342,8 @@ let username = prompt("Enter your name");
 if ((prompt = false || username === null || username === "")) {
   let usernamePlace = document.getElementById("username-place");
   usernamePlace.innerHTML = "Player";
-} else {
+  } 
+else {
   let usernamePlace = document.getElementById("username-place");
   usernamePlace.innerHTML = username;
 }
