@@ -1,5 +1,6 @@
 const playerBoardElement = document.querySelector(".player-board");
 const enemyBoardElement = document.querySelector(".enemy-board");
+const randomPlacingButton = document.getElementById('randomPlacingButton');
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
@@ -136,6 +137,12 @@ class Board {
     return true;
   }
 
+  clearBoard() {
+    this.ships = [];
+    this.element.innerHTML = '';
+    this.render();
+  }
+
   render() {
     let html = "";
     for (let row = 0; row < this.fieldSize; row++) {
@@ -189,6 +196,19 @@ class Game {
       this.enemyBoardElement,
       this.handleRightClick.bind(this)
     );
+
+    this.randomPlacing();
+  }
+
+  randomPlacing() {
+    randomPlacingButton.addEventListener('click', () => {
+      this.playerBoard.clearBoard();
+      this.enemyBoard.clearBoard();
+      this.playerBoard.initShips();
+      this.enemyBoard.initShips();
+      this.playerBoard.render();
+      this.enemyBoard.render();
+    });
   }
 
   addClickListener(boardElement, handler) {
