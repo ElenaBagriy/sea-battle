@@ -137,7 +137,6 @@ class Board {
   }
 
   render() {
-    console.log("render");
     let html = "";
     for (let row = 0; row < this.fieldSize; row++) {
       html += '<div class="row">';
@@ -235,6 +234,7 @@ class Game {
   }
 
   handleRightClick(event) {
+    event.preventDefault();
     const target = event.target;
     if (!target.classList.contains("cell")) return;
     if (target.classList.contains("hit") || target.classList.contains("miss")) {
@@ -243,7 +243,6 @@ class Game {
     const row = parseInt(target.getAttribute("data-row"));
     const col = parseInt(target.getAttribute("data-col"));
 
-    console.log(target);
     target.classList.add("marked");
   }
 }
