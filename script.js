@@ -173,7 +173,7 @@ class Game {
   constructor(shipLengths, fieldSize) {
     this.fieldSize = fieldSize;
     this.shipLengths = shipLengths;
-    this.clickedCells = [];
+    this.playerTurn = true;
     this.playerBoardElement = document.querySelector(".player-board");
     this.enemyBoardElement = document.querySelector(".enemy-board");
 
@@ -220,6 +220,8 @@ class Game {
   }
 
   handleCellClick(event) {
+    if (!this.playerTurn) return;
+
     const target = event.target;
     if (!target.classList.contains("cell")) return;
 
@@ -232,8 +234,6 @@ class Game {
     }
     const row = parseInt(target.getAttribute("data-row"));
     const col = parseInt(target.getAttribute("data-col"));
-
-    this.clickedCells.push({ row, col });
 
     let isHit = false;
 
@@ -250,11 +250,14 @@ class Game {
 
     if (!isHit) {
       target.classList.add("miss");
+      this.playerTurn = false; // Switch turn to computer
+      setTimeout(() => this.computerMove(), 1000);
     }
   }
 
   handleRightClick(event) {
     event.preventDefault();
+    if (!this.playerTurn) return;
     const target = event.target;
     if (!target.classList.contains("cell")) return;
     if (target.classList.contains("hit") || target.classList.contains("miss")) {
@@ -264,6 +267,52 @@ class Game {
     const col = parseInt(target.getAttribute("data-col"));
 
     target.classList.add("marked");
+  }
+
+  computerMove() {
+    let availableCells = [];
+
+    // Collect all available cells
+    for (let row = 0; row < this.fieldSize; row++) {
+      for (let col = 0; col < this.fieldSize; col++) {
+        const cell = this.playerBoardElement.querySelector(
+          `.cell[data-row="${row}"][data-col="${col}"]`
+        );
+        if (
+          !cell.classList.contains("hit") &&
+          !cell.classList.contains("miss")
+        ) {
+          availableCells.push(cell);
+        }
+      }
+    }
+
+    if (availableCells.length === 0) return;
+
+    // Randomly select a cell
+    const randomIndex = Math.floor(Math.random() * availableCells.length);
+    const target = availableCells[randomIndex];
+    const row = parseInt(target.getAttribute("data-row"));
+    const col = parseInt(target.getAttribute("data-col"));
+
+    let isHit = false;
+
+    this.playerBoard.ships.some((ship) => {
+      if (ship.isHit(row, col)) {
+        isHit = true;
+        target.classList.add("hit");
+        if (ship.isDestroyed) {
+          console.log("Your ship is destroyed!");
+        }
+        setTimeout(() => this.computerMove(), 1000);
+        return true;
+      }
+    });
+
+    if (!isHit) {
+      target.classList.add("miss");
+      this.playerTurn = true;
+    }
   }
 }
 
