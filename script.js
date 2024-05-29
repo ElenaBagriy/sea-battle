@@ -300,19 +300,15 @@ class Game {
 
     this.playerBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
+        const coords = { row, col };
         let n = 1;
 
         isHit = true;
         target.classList.add("hit");
-
-        if (ship.isDestroyed) {
-          this.markSafetyCells(ship).then(() => {
-            // Move only after all cells are marked
-            setTimeout(() => this.computerMove(), 1000);
-          });
-        } else {
+        this.markSafetyCells(ship, ship.isDestroyed, coords).then(() => {
+          // Move only after all cells are marked
           setTimeout(() => this.computerMove(), 1000);
-        }
+        });
         return true;
       }
     });
@@ -326,38 +322,82 @@ class Game {
     }
   }
 
-  markSafetyCells(ship) {
-    return new Promise((resolve) => {
-      let n = 1;
+  markSafetyCells(ship, isDestroyed, coords) {
+    let n = 1;
+    if (isDestroyed) {
+      return new Promise((resolve) => {
+        const safetyCells = ship.safetyCells.filter((safeCell) => {
+          const cell = this.playerBoardElement.querySelector(
+            `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
+          );
+          return (
+            !cell.classList.contains("hit") &&
+            !cell.classList.contains("miss") &&
+            !cell.classList.contains("marked")
+          );
+        });
 
-      const safetyCells = ship.safetyCells.filter((safeCell) => {
-        const cell = this.playerBoardElement.querySelector(
-          `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
-        );
-        return (
-          !cell.classList.contains("hit") &&
-          !cell.classList.contains("miss") &&
-          !cell.classList.contains("marked")
-        );
+        safetyCells.forEach((safeCell, index) => {
+          const cell = this.playerBoardElement.querySelector(
+            `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
+          );
+          setTimeout(() => {
+            cell.classList.add("marked");
+            if (index === safetyCells.length - 1) {
+              resolve();
+            }
+          }, 250 * n);
+          n++;
+        });
+
+        if (safetyCells.length === 0) {
+          resolve();
+        }
       });
+    } else {
+      return new Promise((resolve) => {
+        const areaToMark = [
+          { row: coords.row - 1, col: coords.col - 1 },
+          { row: coords.row - 1, col: coords.col + 1 },
+          { row: coords.row + 1, col: coords.col - 1 },
+          { row: coords.row + 1, col: coords.col + 1 },
+        ];
 
-      safetyCells.forEach((safeCell, index) => {
-        const cell = this.playerBoardElement.querySelector(
-          `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
-        );
-        setTimeout(() => {
-          cell.classList.add("marked");
-          if (index === safetyCells.length - 1) {
-            resolve();
+        const safetyCells = areaToMark.filter((safeCell) => {
+          if (
+            safeCell.row >= 0 &&
+            safeCell.col >= 0 &&
+            safeCell.col < fieldSize &&
+            safeCell.col < fieldSize
+          ) {
+            const cell = this.playerBoardElement.querySelector(
+              `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
+            );
+            return (
+              !cell.classList.contains("hit") &&
+              !cell.classList.contains("miss") &&
+              !cell.classList.contains("marked")
+            );
           }
-        }, 250 * n);
-        n++;
-      });
+        });
+        safetyCells.forEach((safeCell, index) => {
+          const cell = this.playerBoardElement.querySelector(
+            `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
+          );
+          setTimeout(() => {
+            cell.classList.add("marked");
+            if (index === safetyCells.length - 1) {
+              resolve();
+            }
+          }, 250 * n);
+          n++;
+        });
 
-      if (safetyCells.length === 0) {
-        resolve();
-      }
-    });
+        if (safetyCells.length === 0) {
+          resolve();
+        }
+      });
+    }
   }
 }
 
