@@ -186,17 +186,29 @@ class Game {
       this.enemyBoardElement,
       this.handleCellClick.bind(this)
     );
+    this.addRightClickListener(
+      this.enemyBoardElement,
+      this.handleRightClick.bind(this)
+    );
   }
 
   addClickListener(boardElement, handler) {
     boardElement.addEventListener("click", handler);
   }
 
+  addRightClickListener(boardElement, handler) {
+    boardElement.addEventListener("contextmenu", handler);
+  }
+
   handleCellClick(event) {
     const target = event.target;
     if (!target.classList.contains("cell")) return;
 
-    if (target.classList.contains("hit") || target.classList.contains("miss")) {
+    if (
+      target.classList.contains("hit") ||
+      target.classList.contains("miss") ||
+      target.classList.contains("marked")
+    ) {
       return;
     }
     const row = parseInt(target.getAttribute("data-row"));
@@ -212,7 +224,6 @@ class Game {
         target.classList.add("hit");
         if (ship.isDestroyed) {
           console.log("The ship is destroyed!");
-          //   this.markSafetyCells(ship);
         }
         return true;
       }
@@ -223,22 +234,18 @@ class Game {
     }
   }
 
-  //   markSafetyCells(ship) {
-  //     ship.safetyCells.forEach((cell) => {
-  //       const isShipCell = ship.shipCoords.some(
-  //         (coord) => coord.row === cell.row && coord.col === cell.col
-  //       );
+  handleRightClick(event) {
+    const target = event.target;
+    if (!target.classList.contains("cell")) return;
+    if (target.classList.contains("hit") || target.classList.contains("miss")) {
+      return;
+    }
+    const row = parseInt(target.getAttribute("data-row"));
+    const col = parseInt(target.getAttribute("data-col"));
 
-  //       if (!isShipCell) {
-  //         const cellElement = this.enemyBoardElement.querySelector(
-  //           `.cell[data-row="${cell.row}"][data-col="${cell.col}"]`
-  //         );
-  //         if (cellElement) {
-  //           cellElement.classList.add("safety");
-  //         }
-  //       }
-  //     });
-  //   }
+    console.log(target);
+    target.classList.add("marked");
+  }
 }
 
 // Initialize game.
