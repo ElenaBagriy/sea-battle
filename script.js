@@ -3,6 +3,7 @@ const enemyBoardElement = document.querySelector(".enemy-board");
 const playerScoreElement = document.querySelector(".player-score");
 const enemyScoreElement = document.querySelector(".enemy-score");
 const randomPlacingButton = document.getElementById("randomPlacingButton");
+const manualPlacingButton = document.getElementById("manualPlacingButton");
 const currentTurn = document.getElementById("current-turn");
 const usernamePlace = document.getElementById("username-place");
 
@@ -85,6 +86,12 @@ class Ship {
       }
     });
     return isHit;
+  }
+
+  // Rotate ship when placed manually
+  rotate() {
+    this.direction = this.direction === "horizontal" ? "vertical" : "horizontal";
+    this.initCoords();
   }
 }
 
@@ -176,6 +183,54 @@ class Board {
       html += "</div>";
     }
     this.element.innerHTML = html;
+
+    if (this.element.classList.contains("player-board")) {
+      this.placeShips();
+    }
+  }
+
+  placeShips() {
+    const cells = this.element.querySelectorAll(".cell");
+    cells.forEach((cell) => {
+      cell.addEventListener("click", (event) => {
+        const row = parseInt(event.target.getAttribute("data-row"));
+        const col = parseInt(event.target.getAttribute("data-col"));
+        this.handleShipPlacement(row, col);
+      });
+    });
+  }
+
+  handleShipPlacement(row, col) {
+    if (this.ships.length < shipLengths.length) {
+      const length = shipLengths[this.ships.length];
+      const direction = "horizontal";
+      const ship = new Ship(this.element, length, row, col, direction);
+
+      if (this.canPlaceShip(ship)) {
+        this.ships.push(ship);
+        this.render();
+
+        if (this.ships.length === shipLengths.length) {
+          alert("You placed all ships!");
+      }
+      }
+    }
+  }
+
+  rotateShip(row, col) {
+    const ship = this.ships.find((s) =>
+      s.shipCoords.some((coord) => coord.row === row && coord.col === col)
+    );
+    if (ship) {
+      ship.rotate();
+      if (this.canPlaceShip(ship)) {
+        this.render();
+      } else {
+        ship.rotate();
+        ship.rotate();
+        this.render();
+      }
+    }
   }
 }
 
@@ -211,6 +266,7 @@ class Game {
     );
 
     this.randomPlacing();
+    this.manualPlacing();
   }
 
   randomPlacing() {
@@ -222,7 +278,60 @@ class Game {
       this.playerBoard.render();
       this.enemyBoard.render();
     });
+
+    // manualPlacingButton.addEventListener("click", () => {
+    //   this.manualPlacing = true;
+    //   this.playerBoard.clearBoard();
+    //   placementInstructions.innerHTML =
+    //     "Click on the board to place your ships. Click on a placed ship to rotate it.";
+    // });
+
+    // this.playerBoardElement.addEventListener("click", (event) => {
+    //   if (this.manualPlacing) {
+    //     const row = parseInt(event.target.getAttribute("data-row"));
+    //     const col = parseInt(event.target.getAttribute("data-col"));
+    //     this.playerBoard.handleShipPlacement(row, col);
+    //   }
+    // });
+
+    // this.playerBoardElement.addEventListener("contextmenu", (event) => {
+    //   event.preventDefault();
+    //   if (this.manualPlacing) {
+    //     const row = parseInt(event.target.getAttribute("data-row"));
+    //     const col = parseInt(event.target.getAttribute("data-col"));
+    //     this.playerBoard.rotateShip(row, col);
+    //   }
+    // });
   }
+
+  manualPlacing() {
+
+    manualPlacingButton.addEventListener("click", () => {
+      this.manualPlacing = true;
+      this.playerBoard.clearBoard();
+      placementInstructions.innerHTML =
+        "Click on the board to place your ships. Click on a placed ship to rotate it.";
+    });
+
+    this.playerBoardElement.addEventListener("click", (event) => {
+      if (this.manualPlacing) {
+        const row = parseInt(event.target.getAttribute("data-row"));
+        const col = parseInt(event.target.getAttribute("data-col"));
+        this.playerBoard.handleShipPlacement(row, col);
+      }
+    });
+
+    this.playerBoardElement.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      if (this.manualPlacing) {
+        const row = parseInt(event.target.getAttribute("data-row"));
+        const col = parseInt(event.target.getAttribute("data-col"));
+        this.playerBoard.rotateShip(row, col);
+      }
+    });
+  }
+
+  
 
   addClickListener(boardElement, handler) {
     boardElement.addEventListener("click", handler);
