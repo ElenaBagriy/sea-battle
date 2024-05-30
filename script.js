@@ -294,8 +294,6 @@ class Game {
     manualPlacingButton.addEventListener("click", () => {
       this.manualPlacing = true;
       this.playerBoard.clearBoard();
-      placementInstructions.innerHTML =
-        "Click on the board to place your ships. Click on a placed ship to rotate it.";
     });
 
     this.playerBoardElement.addEventListener("click", (event) => {
