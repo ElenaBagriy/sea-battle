@@ -134,3 +134,8 @@ h1 {
 
   font-weight: bold;
 }
+.music{
+  display:flex;
+  justify-content:right;
+  gap: 0.5rem;
+}
