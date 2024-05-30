@@ -1,10 +1,21 @@
 const playerBoardElement = document.querySelector(".player-board");
 const enemyBoardElement = document.querySelector(".enemy-board");
+const playerScoreElement = document.querySelector(".player-score");
+const enemyScoreElement = document.querySelector(".enemy-score");
 const randomPlacingButton = document.getElementById("randomPlacingButton");
 const currentTurn = document.getElementById("current-turn");
+const usernamePlace = document.getElementById("username-place");
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
+
+// Choosing user name
+let username = prompt("Enter your name");
+if ((prompt = false || username === null || username === "")) {
+  usernamePlace.innerHTML = "Player";
+} else {
+  usernamePlace.innerHTML = username;
+}
 
 // Ship constructor
 class Ship {
@@ -13,14 +24,13 @@ class Ship {
       ? "human"
       : "computer";
     this.field = element;
-    this.shipname = ""; // name
+    this.shipname = `${this.player}${row}${col}`; // name
     this.length = length;
     this.startRow = row;
     this.startCol = col;
     this.direction = direction;
     this.isDestroyed = false;
     this.hits = 0;
-    this.hitsCoords = [];
     this.shipCoords = [];
     this.safetyCells = [];
     this.initCoords();
@@ -65,13 +75,12 @@ class Ship {
     let isHit = false;
     this.shipCoords.some((item) => {
       if (item.row === row && item.col === col) {
-        this.hitsCoords.push({ row, col });
         this.hits += 1;
         isHit = true;
         if (this.hits === this.length) {
           this.isDestroyed = true;
         }
-        console.log("piu");
+        console.log("Damaged ", this.shipname);
         return true;
       }
     });
@@ -189,6 +198,9 @@ class Game {
       this.enemyBoardElement
     );
 
+    this.playerCounter = 0;
+    this.enemyCounter = 0;
+
     this.addClickListener(
       this.enemyBoardElement,
       this.handleCellClick.bind(this)
@@ -237,13 +249,16 @@ class Game {
     const col = parseInt(target.getAttribute("data-col"));
 
     let isHit = false;
+    let scoreMessage;
 
     this.enemyBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
         isHit = true;
+        this.playerCounter += 1;
+        playerScoreElement.textContent = `${this.playerCounter}`;
         target.classList.add("hit");
         if (ship.isDestroyed) {
-          console.log("The ship is destroyed!");
+          console.log("You destroyed the ship ", ship.shipname);
         }
         return true;
       }
@@ -304,7 +319,12 @@ class Game {
         let n = 1;
 
         isHit = true;
+        this.enemyCounter += 1;
+        enemyScoreElement.textContent = `${this.enemyCounter}`;
         target.classList.add("hit");
+        if (ship.isDestroyed) {
+          console.log("Enemy destroyed your ship ", ship.shipname);
+        }
         this.markSafetyCells(ship, ship.isDestroyed, coords).then(() => {
           // Move only after all cells are marked
           setTimeout(() => this.computerMove(), 1000);
@@ -406,13 +426,3 @@ class Game {
 
 // Initialize game.
 const newGame = new Game(shipLengths, fieldSize);
-
-// Choosing user name
-let username = prompt("Enter your name");
-if ((prompt = false || username === null || username === "")) {
-  let usernamePlace = document.getElementById("username-place");
-  usernamePlace.innerHTML = "Player";
-} else {
-  let usernamePlace = document.getElementById("username-place");
-  usernamePlace.innerHTML = username;
-}
