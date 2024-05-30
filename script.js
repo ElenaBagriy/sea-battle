@@ -199,6 +199,14 @@ class Board {
         const col = parseInt(event.target.getAttribute("data-col"));
         this.handleShipPlacement(row, col);
       });
+
+      cell.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        const row = parseInt(event.target.getAttribute("data-row"));
+        const col = parseInt(event.target.getAttribute("data-col"));
+        this.handleShipPlacement(row, col);
+        this.rotateShip(row, col);
+      });
     });
   }
 
@@ -280,30 +288,6 @@ class Game {
       this.playerBoard.render();
       this.enemyBoard.render();
     });
-
-    // manualPlacingButton.addEventListener("click", () => {
-    //   this.manualPlacing = true;
-    //   this.playerBoard.clearBoard();
-    //   placementInstructions.innerHTML =
-    //     "Click on the board to place your ships. Click on a placed ship to rotate it.";
-    // });
-
-    // this.playerBoardElement.addEventListener("click", (event) => {
-    //   if (this.manualPlacing) {
-    //     const row = parseInt(event.target.getAttribute("data-row"));
-    //     const col = parseInt(event.target.getAttribute("data-col"));
-    //     this.playerBoard.handleShipPlacement(row, col);
-    //   }
-    // });
-
-    // this.playerBoardElement.addEventListener("contextmenu", (event) => {
-    //   event.preventDefault();
-    //   if (this.manualPlacing) {
-    //     const row = parseInt(event.target.getAttribute("data-row"));
-    //     const col = parseInt(event.target.getAttribute("data-col"));
-    //     this.playerBoard.rotateShip(row, col);
-    //   }
-    // });
   }
 
   manualPlacing() {
@@ -319,15 +303,6 @@ class Game {
         const row = parseInt(event.target.getAttribute("data-row"));
         const col = parseInt(event.target.getAttribute("data-col"));
         this.playerBoard.handleShipPlacement(row, col);
-      }
-    });
-
-    this.playerBoardElement.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
-      if (this.manualPlacing) {
-        const row = parseInt(event.target.getAttribute("data-row"));
-        const col = parseInt(event.target.getAttribute("data-col"));
-        this.playerBoard.rotateShip(row, col);
       }
     });
   }
