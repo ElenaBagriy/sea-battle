@@ -11,13 +11,14 @@ const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
 
 // Choosing user name
-let username = prompt("Enter your name");
-if ((prompt = false || username === null || username === "")) {
-  usernamePlace.innerHTML = "Player";
-} else {
-  usernamePlace.innerHTML = username;
-}
-
+function changeName(){
+  let username = prompt("Enter your name");
+  if (username === null || username === "") {
+    usernamePlace.innerHTML = "Player";
+  } else {
+    document.getElementById("username-place").innerHTML = username;
+  }
+};
 // Ship constructor
 class Ship {
   constructor(element, length, row, col, direction) {
@@ -90,7 +91,8 @@ class Ship {
 
   // Rotate ship when placed manually
   rotate() {
-    this.direction = this.direction === "horizontal" ? "vertical" : "horizontal";
+    this.direction =
+      this.direction === "horizontal" ? "vertical" : "horizontal";
     this.initCoords();
   }
 }
@@ -212,7 +214,7 @@ class Board {
 
         if (this.ships.length === shipLengths.length) {
           alert("You placed all ships!");
-      }
+        }
       }
     }
   }
@@ -305,7 +307,6 @@ class Game {
   }
 
   manualPlacing() {
-
     manualPlacingButton.addEventListener("click", () => {
       this.manualPlacing = true;
       this.playerBoard.clearBoard();
@@ -330,8 +331,6 @@ class Game {
       }
     });
   }
-
-  
 
   addClickListener(boardElement, handler) {
     boardElement.addEventListener("click", handler);
