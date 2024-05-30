@@ -19,6 +19,19 @@ function changeName(){
     document.getElementById("username-place").innerHTML = username;
   }
 };
+
+
+// Music
+let aud = document.getElementById("myAudio");
+function play() {
+  aud.play();
+}
+function pause() {
+  aud.pause();
+}
+aud.play(); 
+
+
 // Ship constructor
 class Ship {
   constructor(element, length, row, col, direction) {
