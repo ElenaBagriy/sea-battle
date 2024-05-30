@@ -367,18 +367,21 @@ class Game {
           if (
             safeCell.row >= 0 &&
             safeCell.col >= 0 &&
-            safeCell.col < fieldSize &&
+            safeCell.row < fieldSize &&
             safeCell.col < fieldSize
           ) {
             const cell = this.playerBoardElement.querySelector(
               `.cell[data-row="${safeCell.row}"][data-col="${safeCell.col}"]`
             );
-            return (
-              !cell.classList.contains("hit") &&
-              !cell.classList.contains("miss") &&
-              !cell.classList.contains("marked")
-            );
+            if (cell) {
+              return (
+                !cell.classList.contains("hit") &&
+                !cell.classList.contains("miss") &&
+                !cell.classList.contains("marked")
+              );
+            }
           }
+          return false;
         });
         safetyCells.forEach((safeCell, index) => {
           const cell = this.playerBoardElement.querySelector(
