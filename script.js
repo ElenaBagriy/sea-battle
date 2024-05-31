@@ -2,6 +2,7 @@ const playerBoardElement = document.querySelector(".player-board");
 const enemyBoardElement = document.querySelector(".enemy-board");
 const playerScoreElement = document.querySelector(".player-score");
 const enemyScoreElement = document.querySelector(".enemy-score");
+const restartButton = document.getElementById("restartButton");
 const randomPlacingButton = document.getElementById("randomPlacingButton");
 const manualPlacingButton = document.getElementById("manualPlacingButton");
 const currentTurn = document.getElementById("current-turn");
@@ -517,6 +518,16 @@ class Game {
     }
   }
 }
+
+restartButton.addEventListener("click", () => {
+  playerScoreElement.textContent = "0";
+  enemyScoreElement.textContent = "0";
+  usernamePlace.textContent = "Player";
+  newGame.playerCounter = 0;
+  newGame.enemyCounter = 0;
+  newGame.playerBoard.clearBoard();
+  newGame.enemyBoard.clearBoard();
+});
 
 // Initialize game.
 const newGame = new Game(shipLengths, fieldSize);
