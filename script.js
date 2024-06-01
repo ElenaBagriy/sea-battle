@@ -11,6 +11,25 @@ const usernamePlace = document.getElementById("username-place");
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
 
+// Sounds
+const sfx = {
+  splash: new Howl({
+    src: [
+      "https://cdn.pixabay.com/download/audio/2024/04/01/audio_fe1b3959df.mp3?filename=water-splash-199583.mp3",
+    ],
+  }),
+  explode: new Howl({
+    src: [
+      "https://cdn.pixabay.com/audio/2023/07/14/audio_23ab712cd9.mp3",
+    ],
+  }),
+  destroy: new Howl({
+    src: [
+      "https://cdn.pixabay.com/audio/2022/03/10/audio_54e0895d4f.mp3",
+    ],
+  }),
+};
+
 // Choosing user name
 function changeName(){
   let username = prompt("Enter your name");
@@ -348,11 +367,13 @@ class Game {
 
     this.enemyBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
+        sfx.explode.play();
         isHit = true;
         this.playerCounter += 1;
         playerScoreElement.textContent = `${this.playerCounter}`;
         target.classList.add("hit");
         if (ship.isDestroyed) {
+          sfx.destroy.play();
           console.log("You destroyed the ship ", ship.shipname);
         }
         return true;
@@ -360,6 +381,7 @@ class Game {
     });
 
     if (!isHit) {
+      sfx.splash.play();
       target.classList.add("miss");
       this.playerTurn = false; // Switch turn to computer
       currentTurn.innerHTML = "Computer turn!";
@@ -410,6 +432,7 @@ class Game {
 
     this.playerBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
+        sfx.explode.play();
         const coords = { row, col };
         let n = 1;
 
@@ -429,6 +452,7 @@ class Game {
     });
 
     if (!isHit) {
+      sfx.splash.play();
       target.classList.add("miss");
       this.playerTurn = true;
       setTimeout(function () {
@@ -440,6 +464,7 @@ class Game {
   markSafetyCells(ship, isDestroyed, coords) {
     let n = 1;
     if (isDestroyed) {
+      sfx.destroy.play();
       return new Promise((resolve) => {
         const safetyCells = ship.safetyCells.filter((safeCell) => {
           const cell = this.playerBoardElement.querySelector(
