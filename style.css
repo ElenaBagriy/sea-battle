@@ -38,7 +38,7 @@ main {
   width: calc(100% - 80px);
   height: 100vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 3em;
+  padding: 1em;
 }
 
 h1 {
@@ -109,20 +109,23 @@ h1 {
 .cell.hide {
   background-color: rgb(198, 203, 205);
 }
-.cell.hit { 
+.cell.hit {
   background-color: red;
-  /* position: absolute;
-  width: 30px;
-  height: 30px;
-   animation: fire-glow 0.5s infinite alternate-reverse; */
-
- 
+  background-image: url('images/fire.jpg');
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative; 
+  height: 100%;
+  width: 100%; 
+  animation: fire-glow 0.5s infinite alternate-reverse;
 }
 
-/* @keyframes fire-glow {
-  0% { opacity: 0; }
+@keyframes fire-glow {
+  0% { opacity: 0.3; }
   100% { opacity: 1; }
-} */
+}
+
 .cell.miss {
   background-color: gray;
 }
