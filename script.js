@@ -7,6 +7,7 @@ const randomPlacingButton = document.getElementById("randomPlacingButton");
 const manualPlacingButton = document.getElementById("manualPlacingButton");
 const currentTurn = document.getElementById("current-turn");
 const usernamePlace = document.getElementById("username-place");
+const shipsListElement = document.querySelector(".ships-list");
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
@@ -39,7 +40,6 @@ function changeName(){
     document.getElementById("username-place").innerHTML = username;
   }
 };
-
 
 // Music
 let aud = document.getElementById("myAudio");
@@ -121,6 +121,7 @@ class Ship {
     });
     return isHit;
   }
+
 
   // Rotate ship when placed manually
   rotate() {
@@ -363,7 +364,6 @@ class Game {
     const col = parseInt(target.getAttribute("data-col"));
 
     let isHit = false;
-    let scoreMessage;
 
     this.enemyBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
@@ -374,6 +374,7 @@ class Game {
         target.classList.add("hit");
         if (ship.isDestroyed) {
           sfx.destroy.play();
+          this.showDestroyedIcons(ship, "red-cross")
           console.log("You destroyed the ship ", ship.shipname);
         }
         return true;
@@ -383,6 +384,7 @@ class Game {
     if (!isHit) {
       sfx.splash.play();
       target.classList.add("miss");
+      sfx.splash.play();
       this.playerTurn = false; // Switch turn to computer
       currentTurn.innerHTML = "Computer turn!";
       setTimeout(() => this.computerMove(), 1000);
@@ -398,7 +400,7 @@ class Game {
       return;
     }
 
-    target.classList.add("marked");
+    target.classList.toggle("marked");
   }
 
   computerMove() {
@@ -434,7 +436,7 @@ class Game {
       if (ship.isHit(row, col)) {
         sfx.explode.play();
         const coords = { row, col };
-        let n = 1;
+        sfx.explode.play();
 
         isHit = true;
         this.enemyCounter += 1;
@@ -454,6 +456,7 @@ class Game {
     if (!isHit) {
       sfx.splash.play();
       target.classList.add("miss");
+      sfx.splash.play();
       this.playerTurn = true;
       setTimeout(function () {
         currentTurn.innerHTML = "Your turn!";
@@ -540,6 +543,63 @@ class Game {
           resolve();
         }
       });
+    }
+  }
+
+  showDestroyedIcons(ship, iconClass) {
+
+    const shipsListElements = document.querySelectorAll('.ship-icon')
+
+    for (const element of shipsListElements) {
+      switch (ship.length) {
+        case 4:
+          if(element.classList.contains('fourdeck') && ship.isDestroyed) {
+            for (let i = 1; i <= ship.length; i++) {
+              setTimeout(() => {
+                fn(element);
+              }, i * 200);
+            }
+          }
+          break;
+          case 3:
+            if(element.classList.contains('tripledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                setTimeout(() => {
+                  fn(element);
+                }, i * 200);
+              }
+              return;
+            }
+          break;
+          case 2:
+            if(element.classList.contains('doubledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                setTimeout(() => {
+                  fn(element);
+                }, i * 200);
+              }
+              return;
+            }
+          break;
+          case 1:
+            if(element.classList.contains('singledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                setTimeout(() => {
+                  fn(element);
+                }, i * 200);
+              }
+              return;
+            }
+          break;
+      
+        default:
+          break;
+      }
+    }
+    function fn(element) {
+      const span = document.createElement("span");
+      span.className = `icon-field ${iconClass}`;
+      element.appendChild(span);
     }
   }
 }

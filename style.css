@@ -158,3 +158,117 @@ button {
   border-radius: 5px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
+
+
+/* List of enemy ships */
+
+.ships-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.ships-list-item {
+  position: relative;
+  top: 15px;
+  left: 25px;
+  display: flex;
+  gap: 35px;
+}
+
+.ship-icon {
+  height: 35px;
+  background: url("./images/sprite.png") no-repeat;
+  display: flex;
+}
+
+.fourdeck {
+  width: 134px;
+  background-position: 0 0;
+}
+
+.tripledeck {
+  width: 101px;
+  background-position: -150px 0;
+}
+
+.doubledeck {
+  width: 68px;
+  background-position: -270px 0;
+}
+
+.singledeck {
+  width: 35px;
+  background-position: -360px 0;
+}
+
+.icon-field {
+  width: 33px;
+  height: 33px;
+  display: block;
+  /* position: absolute; */
+  z-index: 5;
+}
+
+.red-cross {
+  background: url("./images/sprite.png") no-repeat;
+  background-position: -410px -50px;
+}
+
+
+/* List of enemy ships */
+
+.ships-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.ships-list-item {
+  position: relative;
+  top: 15px;
+  left: 25px;
+  display: flex;
+  gap: 35px;
+}
+
+.ship-icon {
+  height: 35px;
+  background: url("./images/sprite.png") no-repeat;
+  display: flex;
+}
+
+.fourdeck {
+  width: 134px;
+  background-position: 0 0;
+}
+
+.tripledeck {
+  width: 101px;
+  background-position: -150px 0;
+}
+
+.doubledeck {
+  width: 68px;
+  background-position: -270px 0;
+}
+
+.singledeck {
+  width: 35px;
+  background-position: -360px 0;
+}
+
+.icon-field {
+  width: 33px;
+  height: 33px;
+  display: block;
+  /* position: absolute; */
+  z-index: 5;
+}
+
+.red-cross {
+  background: url("./images/sprite.png") no-repeat;
+  background-position: -410px -50px;
+}

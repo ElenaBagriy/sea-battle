@@ -11,16 +11,16 @@
 
 <body>
   
-    <main>
         <h1>Sea battle</h1>
         <audio id="myAudio">
             <source src="music.mp3" type="audio/mp3">
-            </audio>
-            <div class="music">
+        </audio>
+        <div class="music">
             <p>Music:</p>
             <button onclick="play()" type="button">On</button>
             <button onclick="pause()" type="button">Off</button>
-            </div>
+        </div>
+
         <p id="current-turn">Your turn!</p>
 
 
@@ -34,6 +34,7 @@
                 <h2>Computer</h2>
                 <p>Computer score: <span class="enemy-score">0</span></p>
                 <div class="board enemy-board"></div>
+                </div>
             </section>
         </div>
 
@@ -41,6 +42,12 @@
         <button id="randomPlacingButton">Random</button>
         <button id="manualPlacingButton">Manual</button>
         <button id="userNameButton" onclick="changeName()">Name</button>
+        <ul class="ships-list">
+            <li class="ships-list-item"><div class="ship-icon fourdeck"></div></li>
+            <li class="ships-list-item"><div class="ship-icon tripledeck"></div><div class="ship-icon tripledeck"></div></li>
+            <li class="ships-list-item"><div class="ship-icon doubledeck"></div><div class="ship-icon doubledeck"></div><div class="ship-icon doubledeck"></div></li>
+            <li class="ships-list-item"><div class="ship-icon singledeck"></div><div class="ship-icon singledeck"></div><div class="ship-icon singledeck"></div><div class="ship-icon singledeck"></div></li>
+        </ul>
     </main>
     
 
