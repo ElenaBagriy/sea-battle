@@ -396,15 +396,16 @@ class Game {
         target.classList.add("hit");
         currentTurn.innerHTML = 'Congratulations! You damaged an enemy ship. Your shot.';
 
-        if (this.playerCounter === 20) {
-          this.finish('player');
-          return true;
-        }
-
+        
         if (ship.isDestroyed) {
           sfx.destroy.play();
           this.showDestroyedIcons(ship, "red-cross")
           currentTurn.innerHTML = 'Congratulations! You destroyed an enemy ship. Your shot.';
+        }
+        
+        if (this.playerCounter === 20) {
+          this.finish('player');
+          return true;
         }
         return true;
       }
