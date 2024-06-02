@@ -2,13 +2,34 @@ const playerBoardElement = document.querySelector(".player-board");
 const enemyBoardElement = document.querySelector(".enemy-board");
 const playerScoreElement = document.querySelector(".player-score");
 const enemyScoreElement = document.querySelector(".enemy-score");
+const restartButton = document.getElementById("restartButton");
 const randomPlacingButton = document.getElementById("randomPlacingButton");
 const manualPlacingButton = document.getElementById("manualPlacingButton");
 const currentTurn = document.getElementById("current-turn");
 const usernamePlace = document.getElementById("username-place");
+const shipsListElement = document.querySelector(".ships-list");
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
+
+// Sounds
+const sfx = {
+  splash: new Howl({
+    src: [
+      "https://cdn.pixabay.com/download/audio/2024/04/01/audio_fe1b3959df.mp3?filename=water-splash-199583.mp3",
+    ],
+  }),
+  explode: new Howl({
+    src: [
+      "https://cdn.pixabay.com/audio/2023/07/14/audio_23ab712cd9.mp3",
+    ],
+  }),
+  destroy: new Howl({
+    src: [
+      "https://cdn.pixabay.com/audio/2022/03/10/audio_54e0895d4f.mp3",
+    ],
+  }),
+};
 
 // Choosing user name
 function changeName(){
@@ -19,7 +40,6 @@ function changeName(){
     document.getElementById("username-place").innerHTML = username;
   }
 };
-
 
 // Music
 let aud = document.getElementById("myAudio");
@@ -101,6 +121,7 @@ class Ship {
     });
     return isHit;
   }
+
 
   // Rotate ship when placed manually
   rotate() {
@@ -261,6 +282,7 @@ class Game {
   constructor(shipLengths, fieldSize) {
     this.fieldSize = fieldSize;
     this.shipLengths = shipLengths;
+    
     this.playerTurn = true;
     this.playerBoardElement = document.querySelector(".player-board");
     this.enemyBoardElement = document.querySelector(".enemy-board");
@@ -279,17 +301,30 @@ class Game {
     this.playerCounter = 0;
     this.enemyCounter = 0;
 
+    this.randomPlacing();
+    this.manualPlacing();
+    this.init();
+  }
+
+  init() {
+    this.playerTurn = Math.random() > 0.5;
+
+    if(!this.playerTurn) {
+      currentTurn.innerHTML = 'The computer shoots first';
+      setTimeout(() => this.computerMove(), 2000);
+    }
+
+    this.handleCellClickBound = this.handleCellClick.bind(this);
+    this.handleRightClickBound = this.handleRightClick.bind(this);
+
     this.addClickListener(
       this.enemyBoardElement,
-      this.handleCellClick.bind(this)
+      this.handleCellClickBound
     );
     this.addRightClickListener(
       this.enemyBoardElement,
-      this.handleRightClick.bind(this)
+      this.handleRightClickBound
     );
-
-    this.randomPlacing();
-    this.manualPlacing();
   }
 
   randomPlacing() {
@@ -326,6 +361,14 @@ class Game {
     boardElement.addEventListener("contextmenu", handler);
   }
 
+  removeClickListener(boardElement, handler) {
+    boardElement.removeEventListener("click", handler);
+  }
+
+  removeRightClickListener(boardElement, handler) {
+    boardElement.removeEventListener("contextmenu", handler);
+  }
+
   handleCellClick(event) {
     if (!this.playerTurn) return;
 
@@ -343,25 +386,37 @@ class Game {
     const col = parseInt(target.getAttribute("data-col"));
 
     let isHit = false;
-    let scoreMessage;
 
     this.enemyBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
+        sfx.explode.play();
         isHit = true;
         this.playerCounter += 1;
         playerScoreElement.textContent = `${this.playerCounter}`;
         target.classList.add("hit");
+        currentTurn.innerHTML = 'Congratulations! You damaged an enemy ship. Your shot.';
+
+        
         if (ship.isDestroyed) {
-          console.log("You destroyed the ship ", ship.shipname);
+          sfx.destroy.play();
+          this.showDestroyedIcons(ship, "red-cross")
+          currentTurn.innerHTML = 'Congratulations! You destroyed an enemy ship. Your shot.';
+        }
+        
+        if (this.playerCounter === 20) {
+          this.finish('player');
+          return true;
         }
         return true;
       }
     });
 
     if (!isHit) {
+      sfx.splash.play();
       target.classList.add("miss");
+      sfx.splash.play();
       this.playerTurn = false; // Switch turn to computer
-      currentTurn.innerHTML = "Computer turn!";
+      currentTurn.innerHTML = "You missed. The computer shoots!";
       setTimeout(() => this.computerMove(), 1000);
     }
   }
@@ -375,7 +430,7 @@ class Game {
       return;
     }
 
-    target.classList.add("marked");
+    target.classList.toggle("marked");
   }
 
   computerMove() {
@@ -409,18 +464,25 @@ class Game {
 
     this.playerBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
+        sfx.explode.play();
         const coords = { row, col };
-        let n = 1;
+        sfx.explode.play();
 
         isHit = true;
         this.enemyCounter += 1;
         enemyScoreElement.textContent = `${this.enemyCounter}`;
         target.classList.add("hit");
+        currentTurn.innerHTML = 'The computer has hit your ship. Computer shot';
         if (ship.isDestroyed) {
-          console.log("Enemy destroyed your ship ", ship.shipname);
+          currentTurn.innerHTML = 'The computer destroyed your ship. Computer shot';
         }
+
         this.markSafetyCells(ship, ship.isDestroyed, coords).then(() => {
           // Move only after all cells are marked
+          if (this.enemyCounter === 20) {
+            this.finish('computer');
+            return true;
+          }
           setTimeout(() => this.computerMove(), 1000);
         });
         return true;
@@ -428,17 +490,22 @@ class Game {
     });
 
     if (!isHit) {
+      sfx.splash.play();
       target.classList.add("miss");
+      sfx.splash.play();
       this.playerTurn = true;
       setTimeout(function () {
-        currentTurn.innerHTML = "Your turn!";
+        currentTurn.innerHTML = "The computer missed. Your shot!";
       }, 200);
     }
+
+    
   }
 
   markSafetyCells(ship, isDestroyed, coords) {
     let n = 1;
     if (isDestroyed) {
+      sfx.destroy.play();
       return new Promise((resolve) => {
         const safetyCells = ship.safetyCells.filter((safeCell) => {
           const cell = this.playerBoardElement.querySelector(
@@ -516,7 +583,94 @@ class Game {
       });
     }
   }
+
+  showDestroyedIcons(ship, iconClass) {
+
+    const shipsListElements = document.querySelectorAll('.ship-icon')
+
+    for (const element of shipsListElements) {
+      switch (ship.length) {
+        case 4:
+          if(element.classList.contains('fourdeck') && ship.isDestroyed) {
+            for (let i = 1; i <= ship.length; i++) {
+              setTimeout(() => {
+                fn(element);
+              }, i * 200);
+            }
+          }
+          break;
+          case 3:
+            if(element.classList.contains('tripledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                setTimeout(() => {
+                  fn(element);
+                }, i * 200);
+              }
+              return;
+            }
+          break;
+          case 2:
+            if(element.classList.contains('doubledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                setTimeout(() => {
+                  fn(element);
+                }, i * 200);
+              }
+              return;
+            }
+          break;
+          case 1:
+            if(element.classList.contains('singledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                setTimeout(() => {
+                  fn(element);
+                }, i * 200);
+              }
+              return;
+            }
+          break;
+      
+        default:
+          break;
+      }
+    }
+    function fn(element) {
+      const span = document.createElement("span");
+      span.className = `icon-field ${iconClass}`;
+      element.appendChild(span);
+    }
+  }
+
+
+  removeListeners() {
+    // Remove the right-click listener using the saved reference
+    this.removeClickListener(this.enemyBoardElement, this.handleCellClickBound);
+    this.removeRightClickListener(this.enemyBoardElement, this.handleRightClickBound);
+
+  }
+
+  finish(winner) {
+    if (winner === 'computer') {
+      currentTurn.innerHTML ='Unfortunately, you lost the game.'
+    }
+    else {
+      currentTurn.innerHTML ='Congratulations! You`ve won the game!'
+    }
+
+
+    this.removeListeners();
+  }
 }
+
+restartButton.addEventListener("click", () => {
+  playerScoreElement.textContent = "0";
+  enemyScoreElement.textContent = "0";
+  usernamePlace.textContent = "Player";
+  newGame.playerCounter = 0;
+  newGame.enemyCounter = 0;
+  newGame.playerBoard.clearBoard();
+  newGame.enemyBoard.clearBoard();
+});
 
 // Initialize game.
 const newGame = new Game(shipLengths, fieldSize);
