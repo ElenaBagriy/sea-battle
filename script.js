@@ -282,6 +282,7 @@ class Game {
   constructor(shipLengths, fieldSize) {
     this.fieldSize = fieldSize;
     this.shipLengths = shipLengths;
+    
     this.playerTurn = true;
     this.playerBoardElement = document.querySelector(".player-board");
     this.enemyBoardElement = document.querySelector(".enemy-board");
@@ -300,17 +301,30 @@ class Game {
     this.playerCounter = 0;
     this.enemyCounter = 0;
 
+    this.randomPlacing();
+    this.manualPlacing();
+    this.init();
+  }
+
+  init() {
+    this.playerTurn = Math.random() > 0.5;
+
+    if(!this.playerTurn) {
+      currentTurn.innerHTML = 'The computer shoots first';
+      setTimeout(() => this.computerMove(), 2000);
+    }
+
+    this.handleCellClickBound = this.handleCellClick.bind(this);
+    this.handleRightClickBound = this.handleRightClick.bind(this);
+
     this.addClickListener(
       this.enemyBoardElement,
-      this.handleCellClick.bind(this)
+      this.handleCellClickBound
     );
     this.addRightClickListener(
       this.enemyBoardElement,
-      this.handleRightClick.bind(this)
+      this.handleRightClickBound
     );
-
-    this.randomPlacing();
-    this.manualPlacing();
   }
 
   randomPlacing() {
@@ -347,6 +361,14 @@ class Game {
     boardElement.addEventListener("contextmenu", handler);
   }
 
+  removeClickListener(boardElement, handler) {
+    boardElement.removeEventListener("click", handler);
+  }
+
+  removeRightClickListener(boardElement, handler) {
+    boardElement.removeEventListener("contextmenu", handler);
+  }
+
   handleCellClick(event) {
     if (!this.playerTurn) return;
 
@@ -372,10 +394,17 @@ class Game {
         this.playerCounter += 1;
         playerScoreElement.textContent = `${this.playerCounter}`;
         target.classList.add("hit");
+        currentTurn.innerHTML = 'Congratulations! You damaged an enemy ship. Your shot.';
+
+        if (this.playerCounter === 20) {
+          this.finish('player');
+          return true;
+        }
+
         if (ship.isDestroyed) {
           sfx.destroy.play();
           this.showDestroyedIcons(ship, "red-cross")
-          console.log("You destroyed the ship ", ship.shipname);
+          currentTurn.innerHTML = 'Congratulations! You destroyed an enemy ship. Your shot.';
         }
         return true;
       }
@@ -386,7 +415,7 @@ class Game {
       target.classList.add("miss");
       sfx.splash.play();
       this.playerTurn = false; // Switch turn to computer
-      currentTurn.innerHTML = "Computer turn!";
+      currentTurn.innerHTML = "You missed. The computer shoots!";
       setTimeout(() => this.computerMove(), 1000);
     }
   }
@@ -442,11 +471,17 @@ class Game {
         this.enemyCounter += 1;
         enemyScoreElement.textContent = `${this.enemyCounter}`;
         target.classList.add("hit");
+        currentTurn.innerHTML = 'The computer has hit your ship. Computer shot';
         if (ship.isDestroyed) {
-          console.log("Enemy destroyed your ship ", ship.shipname);
+          currentTurn.innerHTML = 'The computer destroyed your ship. Computer shot';
         }
+
         this.markSafetyCells(ship, ship.isDestroyed, coords).then(() => {
           // Move only after all cells are marked
+          if (this.enemyCounter === 20) {
+            this.finish('computer');
+            return true;
+          }
           setTimeout(() => this.computerMove(), 1000);
         });
         return true;
@@ -459,9 +494,11 @@ class Game {
       sfx.splash.play();
       this.playerTurn = true;
       setTimeout(function () {
-        currentTurn.innerHTML = "Your turn!";
+        currentTurn.innerHTML = "The computer missed. Your shot!";
       }, 200);
     }
+
+    
   }
 
   markSafetyCells(ship, isDestroyed, coords) {
@@ -601,6 +638,26 @@ class Game {
       span.className = `icon-field ${iconClass}`;
       element.appendChild(span);
     }
+  }
+
+
+  removeListeners() {
+    // Remove the right-click listener using the saved reference
+    this.removeClickListener(this.enemyBoardElement, this.handleCellClickBound);
+    this.removeRightClickListener(this.enemyBoardElement, this.handleRightClickBound);
+
+  }
+
+  finish(winner) {
+    if (winner === 'computer') {
+      currentTurn.innerHTML ='Unfortunately, you lost the game.'
+    }
+    else {
+      currentTurn.innerHTML ='Congratulations! You`ve won the game!'
+    }
+
+
+    this.removeListeners();
   }
 }
 
