@@ -122,12 +122,13 @@ class Ship {
     return isHit;
   }
 
-    // Rotate ship when placed manually
-    rotate() {
-      this.direction =
-        this.direction === "horizontal" ? "vertical" : "horizontal";
-      this.initCoords();
-    }
+
+  // Rotate ship when placed manually
+  rotate() {
+    this.direction =
+      this.direction === "horizontal" ? "vertical" : "horizontal";
+    this.initCoords();
+  }
 }
 
 // Board constructor
@@ -381,6 +382,7 @@ class Game {
     });
 
     if (!isHit) {
+      sfx.splash.play();
       target.classList.add("miss");
       sfx.splash.play();
       this.playerTurn = false; // Switch turn to computer
@@ -432,6 +434,7 @@ class Game {
 
     this.playerBoard.ships.some((ship) => {
       if (ship.isHit(row, col)) {
+        sfx.explode.play();
         const coords = { row, col };
         sfx.explode.play();
 
@@ -451,6 +454,7 @@ class Game {
     });
 
     if (!isHit) {
+      sfx.splash.play();
       target.classList.add("miss");
       sfx.splash.play();
       this.playerTurn = true;
@@ -463,6 +467,7 @@ class Game {
   markSafetyCells(ship, isDestroyed, coords) {
     let n = 1;
     if (isDestroyed) {
+      sfx.destroy.play();
       return new Promise((resolve) => {
         const safetyCells = ship.safetyCells.filter((safeCell) => {
           const cell = this.playerBoardElement.querySelector(
