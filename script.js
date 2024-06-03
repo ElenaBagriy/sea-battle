@@ -254,7 +254,7 @@ class Board {
 
         if (this.ships.length === shipLengths.length) {
           alert("You placed all ships!");
-          game.allShipsPlaced = true;
+          this.allShipsPlaced = true;
         }
       }
     }
@@ -281,9 +281,10 @@ class Game {
   constructor(shipLengths, fieldSize) {
     this.fieldSize = fieldSize;
     this.shipLengths = shipLengths;
+    this.allShipsPlaced = false;
+    this.manualPlacingEnabled = false;
     
     this.playerTurn = true;
-    this.allShipsPlaced = false;
     this.playerBoardElement = document.querySelector(".player-board");
     this.enemyBoardElement = document.querySelector(".enemy-board");
     this.availableCells = [];
@@ -330,36 +331,40 @@ class Game {
 
   randomPlacing() {
     randomPlacingButton.addEventListener("click", () => {
-      playerScoreElement.textContent = "0";
-      enemyScoreElement.textContent = "0";
-      usernamePlace.textContent = "Player";
       this.playerBoard.clearBoard();
       this.enemyBoard.clearBoard();
       this.playerBoard.initShips();
       this.enemyBoard.initShips();
       this.playerBoard.render();
       this.enemyBoard.render();
+      playerScoreElement.textContent = "0";
+      enemyScoreElement.textContent = "0";
+      usernamePlace.textContent = "Player";
       currentTurn.innerText = "Your turn!";
+      this.allShipsPlaced = true;
     });
   }
 
   manualPlacing() {
     manualPlacingButton.addEventListener("click", () => {
-      this.manualPlacing = true;
       this.playerBoard.clearBoard();
-      this.enemyBoard.clearBoard();
+      this.enemyBoard.render();
+      this.allShipsPlaced = false;
       playerScoreElement.textContent = "0";
       enemyScoreElement.textContent = "0";
       usernamePlace.textContent = "Player";
       currentTurn.innerText = "Your turn!";
+      this.manualPlacingEnabled = true;
     });
-
+    
     this.playerBoardElement.addEventListener("click", (event) => {
-      if (this.manualPlacing) {
+      if (this.manualPlacingEnabled) {
         const row = parseInt(event.target.getAttribute("data-row"));
         const col = parseInt(event.target.getAttribute("data-col"));
         this.playerBoard.handleShipPlacement(row, col);
+        
       }
+      this.allShipsPlaced = true;
     });
   }
 
@@ -380,7 +385,11 @@ class Game {
   }
 
   handleCellClick(event) {
-    if (!this.playerTurn || !this.allShipsPlaced) return alert("Place the ships first");
+    if (this.manualPlacingEnabled && !this.allShipsPlaced) {
+      return alert("Place the ships first");
+    }
+
+    if (!this.playerTurn) return;
 
     const target = event.target;
     if (!target.classList.contains("cell")) return;
