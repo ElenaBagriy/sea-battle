@@ -62,8 +62,8 @@ h1 {
   background-color: #87cefa;
   border-radius: 255px 3px 225px 3px / 0px 225px 3px 255px;
   border: solid 3px #1e51afc9;
-  width: 300px;
-  height: 300px;
+  width: 330px;
+  height: 330px;
   background-image: linear-gradient(
       0deg,
       transparent 24%,
@@ -111,7 +111,8 @@ h1 {
   background-color: rgb(198, 203, 205);
 }
 .cell.hit {
-  background-color: red;
+  background: url("./images/sprite.png") no-repeat;
+  background-position: -410px -50px;
 }
 
 @keyframes fire-glow {
@@ -124,7 +125,8 @@ h1 {
 }
 
 .cell.miss {
-  background-color: gray;
+  background: url("./images/sprite.png") no-repeat;
+  background-position: -410px 0;
 }
 
 .cell:hover {
@@ -133,7 +135,8 @@ h1 {
 }
 
 .cell.marked {
-  background-color: #64ed8f;
+  background: url("./images/sprite.png") no-repeat;
+  background-position: -410px -100px;
 }
 button {
   outline: none;
@@ -267,7 +270,6 @@ button {
   width: 33px;
   height: 33px;
   display: block;
-  /* position: absolute; */
   z-index: 5;
 }
 
