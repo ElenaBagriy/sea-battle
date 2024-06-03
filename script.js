@@ -115,7 +115,6 @@ class Ship {
         if (this.hits === this.length) {
           this.isDestroyed = true;
         }
-        console.log("Damaged ", this.shipname);
         return true;
       }
     });
@@ -286,6 +285,7 @@ class Game {
     this.playerTurn = true;
     this.playerBoardElement = document.querySelector(".player-board");
     this.enemyBoardElement = document.querySelector(".enemy-board");
+    this.availableCells = [];
 
     this.playerBoard = new Board(
       this.shipLengths,
@@ -392,7 +392,7 @@ class Game {
         sfx.explode.play();
         isHit = true;
         this.playerCounter += 1;
-        playerScoreElement.textContent = `${this.playerCounter}`;
+        playerScoreElement.textContent = `${this.playerCounter}/20`;
         target.classList.add("hit");
         currentTurn.innerHTML = 'Congratulations! You damaged an enemy ship. Your shot.';
 
@@ -402,7 +402,7 @@ class Game {
           this.showDestroyedIcons(ship, "red-cross")
           currentTurn.innerHTML = 'Congratulations! You destroyed an enemy ship. Your shot.';
         }
-        
+
         if (this.playerCounter === 20) {
           this.finish('player');
           return true;
@@ -433,30 +433,91 @@ class Game {
     target.classList.toggle("marked");
   }
 
-  computerMove() {
-    let availableCells = [];
+  getAvailableCells(coords) {
+    const areaToHit = [
+      { row: coords.row - 1, col: coords.col },
+      { row: coords.row + 1, col: coords.col },
+      { row: coords.row, col: coords.col - 1 },
+      { row: coords.row, col: coords.col + 1 },
+    ];
 
-    // Collect all available cells
-    for (let row = 0; row < this.fieldSize; row++) {
-      for (let col = 0; col < this.fieldSize; col++) {
+    const hitCells = areaToHit.filter((hitCell) => {
+      if (
+        hitCell.row >= 0 &&
+        hitCell.col >= 0 &&
+        hitCell.row < fieldSize &&
+        hitCell.col < fieldSize
+      ) {
         const cell = this.playerBoardElement.querySelector(
-          `.cell[data-row="${row}"][data-col="${col}"]`
+          `.cell[data-row="${hitCell.row}"][data-col="${hitCell.col}"]`
         );
-        if (
-          !cell.classList.contains("hit") &&
-          !cell.classList.contains("miss") &&
-          !cell.classList.contains("marked")
-        ) {
-          availableCells.push(cell);
+        if (cell) {
+          return (
+            !cell.classList.contains("hit") &&
+            !cell.classList.contains("miss") &&
+            !cell.classList.contains("marked")
+          );
+        }
+      }
+      return false;
+    });
+
+    hitCells.forEach((hitCell) => {
+      const cell = this.playerBoardElement.querySelector(
+        `.cell[data-row="${hitCell.row}"][data-col="${hitCell.col}"]`
+      );
+
+      this.availableCells.push(cell);
+    });
+
+  }
+
+  computerMove(hit, isDestroyed, coords) {
+
+    if (this.availableCells.length > 0 && this.availableCells.length <=4 && !isDestroyed) {
+
+      if (coords) {
+        this.getAvailableCells(coords);
+      }
+
+      this.availableCells = this.availableCells.filter((availableCell) => {
+            return (
+              !availableCell.classList.contains("hit") &&
+              !availableCell.classList.contains("miss") &&
+              !availableCell.classList.contains("marked")
+            );  
+      });
+    } else {
+
+      if (hit && !isDestroyed) {
+          
+          this.availableCells = [];
+          this.getAvailableCells(coords);
+  
+      } else {
+        this.availableCells = [];
+        for (let row = 0; row < this.fieldSize; row++) {
+          for (let col = 0; col < this.fieldSize; col++) {
+            const cell = this.playerBoardElement.querySelector(
+              `.cell[data-row="${row}"][data-col="${col}"]`
+            );
+            if (
+              !cell.classList.contains("hit") &&
+              !cell.classList.contains("miss") &&
+              !cell.classList.contains("marked")
+            ) {
+              this.availableCells.push(cell);
+            }
+          }
         }
       }
     }
 
-    if (availableCells.length === 0) return;
+    if (this.availableCells.length === 0) return;
 
     // Randomly select a cell
-    const randomIndex = Math.floor(Math.random() * availableCells.length);
-    const target = availableCells[randomIndex];
+    const randomIndex = Math.floor(Math.random() * this.availableCells.length);
+    const target = this.availableCells[randomIndex];
     const row = parseInt(target.getAttribute("data-row"));
     const col = parseInt(target.getAttribute("data-col"));
 
@@ -470,7 +531,7 @@ class Game {
 
         isHit = true;
         this.enemyCounter += 1;
-        enemyScoreElement.textContent = `${this.enemyCounter}`;
+        enemyScoreElement.textContent = `${this.enemyCounter}/20`;
         target.classList.add("hit");
         currentTurn.innerHTML = 'The computer has hit your ship. Computer shot';
         if (ship.isDestroyed) {
@@ -478,12 +539,12 @@ class Game {
         }
 
         this.markSafetyCells(ship, ship.isDestroyed, coords).then(() => {
-          // Move only after all cells are marked
           if (this.enemyCounter === 20) {
             this.finish('computer');
             return true;
           }
-          setTimeout(() => this.computerMove(), 1000);
+
+          setTimeout(() => this.computerMove('hit', ship.isDestroyed, coords ), 1000);
         });
         return true;
       }
@@ -493,13 +554,11 @@ class Game {
       sfx.splash.play();
       target.classList.add("miss");
       sfx.splash.play();
-      this.playerTurn = true;
-      setTimeout(function () {
+      setTimeout(() => {
+        this.playerTurn = true;
         currentTurn.innerHTML = "The computer missed. Your shot!";
       }, 200);
     }
-
-    
   }
 
   markSafetyCells(ship, isDestroyed, coords) {
