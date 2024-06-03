@@ -35,7 +35,7 @@ main {
     linear-gradient(to bottom, #0000ff 1px, transparent 1px);
   background-size: 30px 30px;
   text-align: center;
-  width: calc(100% - 80px);
+  width: 100%;
   height: 100vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 1em;
@@ -52,6 +52,7 @@ h1 {
   display: flex;
   justify-content: space-around;
   margin: 1em auto;
+  flex-direction: row;
 }
 
 .board {
@@ -111,19 +112,15 @@ h1 {
 }
 .cell.hit {
   background-color: red;
-  background-image: url('images/fire.jpg');
-  background-size: cover; 
-  background-repeat: no-repeat;
-  background-position: center;
-  position: relative; 
-  height: 100%;
-  width: 100%; 
-  animation: fire-glow 0.5s infinite alternate-reverse;
 }
 
 @keyframes fire-glow {
-  0% { opacity: 0.3; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .cell.miss {
@@ -164,14 +161,16 @@ button {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-
 /* List of enemy ships */
 
 .ships-list {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    margin-top: 3em;
+    width: 30%;
+    align-items: center;
 }
 
 .ships-list-item {
@@ -179,7 +178,8 @@ button {
   top: 15px;
   left: 25px;
   display: flex;
-  gap: 35px;
+  gap: 1em;
+  justify-content: center;
 }
 
 .ship-icon {
@@ -221,7 +221,6 @@ button {
   background-position: -410px -50px;
 }
 
-
 /* List of enemy ships */
 
 .ships-list {
@@ -229,6 +228,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 35px;
+  margin-top: 3em;
 }
 
 .ships-list-item {
