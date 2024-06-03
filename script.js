@@ -254,6 +254,7 @@ class Board {
 
         if (this.ships.length === shipLengths.length) {
           alert("You placed all ships!");
+          game.allShipsPlaced = true;
         }
       }
     }
@@ -282,6 +283,7 @@ class Game {
     this.shipLengths = shipLengths;
     
     this.playerTurn = true;
+    this.allShipsPlaced = false;
     this.playerBoardElement = document.querySelector(".player-board");
     this.enemyBoardElement = document.querySelector(".enemy-board");
     this.availableCells = [];
@@ -378,7 +380,7 @@ class Game {
   }
 
   handleCellClick(event) {
-    if (!this.playerTurn) return;
+    if (!this.playerTurn || !this.allShipsPlaced) return alert("Place the ships first");
 
     const target = event.target;
     if (!target.classList.contains("cell")) return;
