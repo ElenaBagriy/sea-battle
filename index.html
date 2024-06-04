@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js" integrity="sha512-L6Z/YtIPQ7eU3BProP34WGU5yIRk7tNHk7vaC2dB1Vy1atz6wl9mCkTPPZ2Rn1qPr+vY2mZ9odZLdGYuaBk7dQ==" crossorigin="anonymous"></script>
-    <title>Sea battle</title>
+    <title>Sea Battle</title>
 </head>
 
 <body>
-  <main>
-        <h1>Sea battle</h1>
+    <main>
+        <h1>Sea Battle</h1>
         <audio id="myAudio">
             <source src="music.mp3" type="audio/mp3">
         </audio>
@@ -23,18 +23,11 @@
 
         <p id="current-turn">Your turn!</p>
 
-
         <div id="game-container">
             <section>
                 <h2 id="username-place">Player</h2>
                 <p>Your score: <span class="player-score">0/20</span></p>
-                <div class="board player-board"> </div>
-            </section>
-            <section>
-                <h2>Computer</h2>
-                <p>Computer score: <span class="enemy-score">0/20</span></p>
-                <div class="board enemy-board"></div>
-               
+                <div class="board player-board"></div>
             </section>
             <ul class="ships-list">
                 <li class="ships-list-item"><div class="ship-icon fourdeck"></div></li>
@@ -42,16 +35,19 @@
                 <li class="ships-list-item"><div class="ship-icon doubledeck"></div><div class="ship-icon doubledeck"></div><div class="ship-icon doubledeck"></div></li>
                 <li class="ships-list-item"><div class="ship-icon singledeck"></div><div class="ship-icon singledeck"></div><div class="ship-icon singledeck"></div><div class="ship-icon singledeck"></div></li>
             </ul>
-        </div> </div>
+            <section>
+                <h2>Computer</h2>
+                <p>Computer score: <span class="enemy-score">0/20</span></p>
+                <div class="board enemy-board"></div>
+            </section>
+        </div>
 
-        <button id="randomPlacingButton">Random</button>
-        <button id="manualPlacingButton">Manual</button>
-        <button id="userNameButton" onclick="changeName()">Name</button>
-   
+        <div class="button-container">
+            <button id="randomPlacingButton">Random</button>
+            <button id="manualPlacingButton">Manual</button>
+            <button id="userNameButton" onclick="changeName()">Name</button>
+        </div>
     </main>
-    
-
-
 
     <script src="./script.js"></script>
 </body>
