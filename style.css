@@ -110,10 +110,6 @@ h1 {
   /* background-color: #EFF8FF; */
 }
 
-.cell.ship {
-  background-color: #6495ed;
-}
-
 .cell.hide {
   background-color: rgb(198, 203, 205);
 }
@@ -150,6 +146,7 @@ h1 {
   background-position: -410px -100px;
 }
 button {
+  display: inline-block;
   outline: none;
   box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, 0.2);
   border-radius: 255px 21px 225px 31px / 74px 225px 90px 255px;
@@ -167,12 +164,22 @@ button {
   gap: 0.5rem;
 }
 
-.ship {
-  /* width: 30px; */
-  /* height: 30px; */
+.ship.visible{
   background-color: #6495ed;
-  /* border-radius: 5px; */
-  /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); */
+}
+
+.ship-bordered {
+  position: absolute;
+  height: 35px;
+  background-image: url("./images/sprite.png");
+  background-repeat: no-repeat;
+  display: flex;
+  z-index: -1;
+}
+
+.vertical {
+  transform: rotate(90deg);
+  transform-origin: 17.5px 17.5px;
 }
 
 /* List of enemy ships */
@@ -202,7 +209,7 @@ button {
 }
 
 .fourdeck {
-  width: 134px;
+  width: 140px;
   background-position: 0 0;
 }
 
@@ -232,4 +239,8 @@ button {
   background-image: url("./images/sprite.png");
   background-repeat: no-repeat;
   background-position: -410px -50px;
+}
+
+.hidden {
+  display: none;
 }
