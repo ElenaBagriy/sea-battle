@@ -822,7 +822,7 @@ manualPlacingButton.addEventListener("click", () => {
 randomPlacingButton.addEventListener("click", () => {
   startButton.classList.add('hidden')
   if (game) {
-    game.restart();
+    game.stop();
   }
   manual = false;
   allShipsPlaced = true;
