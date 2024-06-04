@@ -23,7 +23,6 @@ soundsElement.addEventListener('click', (e)=> {
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
-
 const timeouts = [];
 
 function customSetTimeout(callback, delay) {
@@ -158,7 +157,7 @@ class Ship {
 
 // Board constructor
 class Board {
-  constructor(shipLengths, fieldSize, fieldElement, manual) {
+  constructor( fieldSize, fieldElement, manual) {
     this.fieldSize = fieldSize;
     this.element = fieldElement;
     this.manualEnabled = manual || false;
@@ -240,7 +239,7 @@ class Board {
       const isValideCol = (ship.startCol + (ship.direction === "vertical" ? 0 : ship.length)) >=0 && (ship.startCol + (ship.direction === "vertical" ? 0 : ship.length)) < this.fieldSize;
 
       if (!isValideRow || !isValideCol) {
-        currentTurn.innerHTML = 'Choose another place';
+        currentTurn.textContent = 'Choose another place';
         return false;
       }
     };
@@ -254,7 +253,7 @@ class Board {
           )
         )
       );
-      currentTurn.innerHTML = 'Choose another place';
+      currentTurn.textContent = 'Choose another place';
       return !isOverlap;
     }
     return true;
@@ -277,12 +276,10 @@ class Board {
             });
           });
         }
-
         html += `<div class='${cssClass}' data-row="${row}" data-col="${col}" ></div>`;
       }
       html += "</div>";
     }
-
     this.element.insertAdjacentHTML("beforeend", html)
   }
 
@@ -301,13 +298,12 @@ class Board {
           ship.shipCoords.map(({row,col})=> {
           const target = document.querySelector(`div[data-row="${row}"][data-col="${col}"]`)
           target.classList.add('ship', 'visible')
-          currentTurn.innerHTML = 'Place next ship';
+          currentTurn.textContent = 'Place next ship';
           })
       }
     }
     if (this.ships.length === shipLengths.length) {
-      alert("You placed all ships!");
-      currentTurn.innerHTML = 'You placed all ships!';
+      currentTurn.textContent = 'You placed all ships!';
       startButton.classList.remove('hidden')
     }
  
@@ -337,7 +333,7 @@ class Board {
         this.ships.push(ship)
         
       } else {
-        currentTurn.innerHTML = 'Can not rotate the ship on this place';
+        currentTurn.textContent = 'Can not rotate the ship on this place';
         ship.rotate(ship);
         ship.shipCoords.map(({row,col})=> {
           const target = document.querySelector(`div[data-row="${row}"][data-col="${col}"]`)
@@ -366,8 +362,8 @@ class Game {
     this.playerCounter = 0;
     this.enemyCounter = 0;
 
-    this.playerBoard = new Board(this.shipLengths, this.fieldSize, this.playerBoardElement, this.manualPlacingEnabled);
-    this.enemyBoard = new Board(this.shipLengths, this.fieldSize, this.enemyBoardElement);
+    this.playerBoard = new Board(this.fieldSize, this.playerBoardElement, this.manualPlacingEnabled);
+    this.enemyBoard = new Board(this.fieldSize, this.enemyBoardElement);
 
     this.init();
   }
@@ -377,11 +373,11 @@ class Game {
       this.playerTurn = Math.random() > 0.5;
   
       if(!this.playerTurn) {
-        currentTurn.innerHTML = 'The computer shoots first';
+        currentTurn.textContent = 'The computer shoots first';
         customSetTimeout(() => this.computerMove(), 2000);
       }
       else {
-        currentTurn.innerHTML = 'Your turn!';
+        currentTurn.textContent = 'Your turn!';
       }
   
       this.handleCellClickBound = this.handleCellClick.bind(this);
@@ -403,7 +399,7 @@ class Game {
     } 
   }
 
-  restart() {
+  stop() {
     this.playerBoardElement.innerHTML = "";
     this.enemyBoardElement.innerHTML = "";
     this.playerCounter = 0;
@@ -412,7 +408,6 @@ class Game {
     this.manualPlacingEnabled = false;
     this.removeListeners();
     clearAllTimeouts();
-
   }
 
   start() {
@@ -459,6 +454,7 @@ class Game {
 
   handleCellClick(event) {
     if (this.manualPlacingEnabled && !this.allShipsPlaced) {
+      currentTurn.textContent = "Place the ships first!"
       return alert("Place the ships first");
     }
 
@@ -486,13 +482,13 @@ class Game {
         this.playerCounter += 1;
         playerScoreElement.textContent = `${this.playerCounter}/20`;
         target.classList.add("hit");
-        currentTurn.innerHTML = 'Congratulations! You damaged an enemy ship. Your shot.';
+        currentTurn.textContent = 'Congratulations! You damaged an enemy ship. Your shot.';
 
         
         if (ship.isDestroyed) {
           sounds && sfx.destroy.play();
           this.showDestroyedIcons(ship, "red-cross")
-          currentTurn.innerHTML = 'Congratulations! You destroyed an enemy ship. Your shot.';
+          currentTurn.textContent = 'Congratulations! You destroyed an enemy ship. Your shot.';
         }
 
         if (this.playerCounter === 20) {
@@ -507,7 +503,7 @@ class Game {
       sounds && sfx.splash.play();
       target.classList.add("miss");
       this.playerTurn = false; // Switch turn to computer
-      currentTurn.innerHTML = "You missed. The computer shoots!";
+      currentTurn.textContent = "You missed. The computer shoots!";
       customSetTimeout(() => this.computerMove(), 1000);
     }
   }
@@ -578,10 +574,7 @@ class Game {
               !availableCell.classList.contains("marked")
             );  
       });
-    } else {
-
-      if (hit && !isDestroyed) {
-          
+    } else if (hit && !isDestroyed) {
           this.availableCells = [];
           this.getAvailableCells(coords);
   
@@ -602,7 +595,6 @@ class Game {
           }
         }
       }
-    }
 
     if (this.availableCells.length === 0) return;
 
@@ -623,9 +615,9 @@ class Game {
         this.enemyCounter += 1;
         enemyScoreElement.textContent = `${this.enemyCounter}/20`;
         target.classList.add("hit");
-        currentTurn.innerHTML = 'The computer has hit your ship. Computer shot';
+        currentTurn.textContent = 'The computer has hit your ship. Computer shot';
         if (ship.isDestroyed) {
-          currentTurn.innerHTML = 'The computer destroyed your ship. Computer shot';
+          currentTurn.textContent = 'The computer destroyed your ship. Computer shot';
         }
 
         this.markSafetyCells(ship, ship.isDestroyed, coords).then(() => {
@@ -633,7 +625,6 @@ class Game {
             this.finish('computer');
             return true;
           }
-
           customSetTimeout(() => this.computerMove('hit', ship.isDestroyed, coords ), 1000);
         });
         return true;
@@ -645,7 +636,7 @@ class Game {
       target.classList.add("miss");
       customSetTimeout(() => {
         this.playerTurn = true;
-        currentTurn.innerHTML = "The computer missed. Your shot!";
+        currentTurn.textContent = "The computer missed. Your shot!";
       }, 200);
     }
   }
@@ -782,8 +773,7 @@ class Game {
               return;
             }
           break;
-      
-        default:
+        default: ""
           break;
       }
     }
@@ -791,47 +781,42 @@ class Game {
       const span = document.createElement("span");
       span.className = `icon-field ${iconClass}`;
       element.appendChild(span);
-      // this.
-      
     }
   }
-
 
   removeListeners() {
     this.removeClickListener(this.enemyBoardElement, this.handleCellClickBound);
     this.removeRightClickListener(this.enemyBoardElement, this.handleRightClickBound);
-
   }
 
   finish(winner) {
     if (winner === 'computer') {
-      currentTurn.innerHTML ='Unfortunately, you lost the game.'
+      currentTurn.textContent ='Unfortunately, you lost the game.'
     }
     else {
-      currentTurn.innerHTML ='Congratulations! You`ve won the game!'
+      currentTurn.textContent ='Congratulations! You`ve won the game!'
     }
-
     this.removeListeners();
   }
 }
 
 
-let manual = false;
-let allShipsPlaced = true;
 
 // Initialize game.
 let game;
+let manual = false;
+let allShipsPlaced = true;
 
 manualPlacingButton.addEventListener("click", () => {
   startButton.classList.add('hidden')
   if (game) {
-    game.restart();
+    game.stop();
   }
   manual = true;
   allShipsPlaced = false;
 
   game = new Game(manual, allShipsPlaced, shipLengths, fieldSize);
-  currentTurn.innerHTML = 'Place your first ship';
+  currentTurn.textContent = 'Place your first ship';
 })
 
 randomPlacingButton.addEventListener("click", () => {
