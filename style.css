@@ -92,7 +92,7 @@ h1 {
   /* background-size: 30px 30px; */
   width: 340px;
   height: 340px;
-  background-image: url("../images/field.png");
+  background-image: url("./images/field.png");
   background-repeat: no-repeat;
   background-size: contain;
   padding: 5px;
@@ -106,8 +106,8 @@ h1 {
 }
 
 .cell {
-  border: 1px solid #d0dfe2;
-  background-color: #EFF8FF;
+  /* border: 1px solid #d0dfe2; */
+  /* background-color: #EFF8FF; */
 }
 
 .cell.ship {
