@@ -4,6 +4,7 @@ const playerScoreElement = document.querySelector(".player-score");
 const enemyScoreElement = document.querySelector(".enemy-score");
 const randomPlacingButton = document.getElementById("randomPlacingButton");
 const manualPlacingButton = document.getElementById("manualPlacingButton");
+const restartButton = document.getElementById("restartButton");
 const startButton = document.getElementById("start");
 const currentTurn = document.getElementById("current-turn");
 const usernamePlace = document.getElementById("username-place");
@@ -846,6 +847,10 @@ window.onload = function() {
 
 randomPlacingButton.onclick = function() {
     modal.style.display = "none";
+}
+
+restartButton.onclick = function() {
+  modal.style.display = "block";
 }
 
 manualPlacingButton.onclick = function() {
