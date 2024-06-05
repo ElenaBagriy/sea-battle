@@ -11,6 +11,15 @@
 
 <body>
   <main>
+        <div id="modalWindow">
+            <div class="modal-content">
+                <p>How would you like to place the ships?</p>
+
+                <button id="randomPlacingButton">Randomly</button>
+                <button id="manualPlacingButton">Manually</button>
+            </div>
+        </div>
+
         <h1>Sea battle</h1>
         <audio id="myAudio">
             <source src="music.mp3" type="audio/mp3">
@@ -49,8 +58,7 @@
             </ul>
         </div> </div>
 
-        <button id="randomPlacingButton">Random</button>
-        <button id="manualPlacingButton">Manual</button>
+        
         <button id="userNameButton" onclick="changeName()">Name</button>
         <button id="start" class="hidden">START</button>
 

@@ -304,7 +304,7 @@ class Board {
     }
     if (this.ships.length === shipLengths.length) {
       currentTurn.textContent = 'You placed all ships!';
-      startButton.classList.remove('hidden')
+      startButton.classList.remove('hidden');
     }
  
   }
@@ -834,3 +834,20 @@ randomPlacingButton.addEventListener("click", () => {
 startButton.addEventListener('click',() => {
   game.start(true);
 })
+
+
+//Modal Window
+var modal = document.querySelector("#modalWindow");
+var span = document.getElementsByClassName("close")[0];
+
+window.onload = function() {
+    modal.style.display = "block";
+}
+
+randomPlacingButton.onclick = function() {
+    modal.style.display = "none";
+}
+
+manualPlacingButton.onclick = function() {
+    modal.style.display = "none";
+}
