@@ -220,7 +220,7 @@ button {
 #modalWindow {
   display: none;
   position: fixed;
-  z-index: 800;
+  z-index: 2000;
   left: 0;
   top: 0;
   width: 100%;
@@ -235,4 +235,31 @@ button {
   margin: 15% auto;
   padding: 20px;
   width: 80%;
+}
+
+
+/* Nav menu */
+nav {
+  position: absolute;
+}
+
+.burger {
+  font-size: 30px;
+  cursor: pointer;
+  background-color: #686b6ecc;
+  color: #ffffff;
+  position: absolute;
+  z-index: 1000;
+  height: 50px;
+  width: 50px;
+}
+
+.menu {
+  display: none;
+  background-color: #686b6ecc;
+  padding: 10px;
+  position: absolute;
+  z-index: 999;
+  width: 400px;
+  height: 500px;
 }

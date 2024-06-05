@@ -20,20 +20,30 @@
             </div>
         </div>
 
+        <nav>
+            <div class="burger" id="burger">&#9776;</div>
+            <div class="menu" id="menu">
+                <audio id="myAudio">
+                    <source src="music.mp3" type="audio/mp3">
+                </audio>
+                <div class="music">
+                    <p>Music:</p>
+                    <button onclick="play()" type="button">On</button>
+                    <button onclick="pause()" type="button">Off</button>
+                </div>
+                <div class="sounds">
+                    <p>Sounds:</p>
+                    <button class="onSounds" type="button">On</button>
+                    <button class="offSounds" type="button">Off</button>
+                </div>
+
+                <button id="userNameButton" onclick="changeName()">Name</button>
+        <button id="restartButton" id="restartButton">Restart</button>
+            </div>
+        </nav>
+        
+
         <h1>Sea battle</h1>
-        <audio id="myAudio">
-            <source src="music.mp3" type="audio/mp3">
-        </audio>
-        <div class="music">
-            <p>Music:</p>
-            <button onclick="play()" type="button">On</button>
-            <button onclick="pause()" type="button">Off</button>
-        </div>
-        <div class="sounds">
-            <p>Sounds:</p>
-            <button class="onSounds" type="button">On</button>
-            <button class="offSounds" type="button">Off</button>
-        </div>
 
         <p id="current-turn">Choose the play mode!</p>
 
@@ -59,8 +69,7 @@
         </div> </div>
 
         
-        <button id="userNameButton" onclick="changeName()">Name</button>
-        <button id="restartButton" id="restartButton">Restart</button>
+        
         <button id="start" class="hidden">START</button>
 
     </main>

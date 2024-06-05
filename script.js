@@ -856,3 +856,19 @@ restartButton.onclick = function() {
 manualPlacingButton.onclick = function() {
     modal.style.display = "none";
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('menu');
+  const button = document.querySelectorAll('button');
+
+  burger.addEventListener('click', () => {
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
+
+  button.forEach(button => {
+    button.addEventListener('click', () => {
+      menu.style.display = 'none';
+    });
+  });
+});
