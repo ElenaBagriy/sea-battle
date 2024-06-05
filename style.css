@@ -20,26 +20,28 @@ a {
 /* End Global rule */
 body {
   font-family: "Hand Drawn Shapes", sans-serif;
- 
-  background-color: #f0f8ff;
+  background-image: url("./images/natural-wood-texture-brown-surface-wooden-table_84485-547.png");
+  background-size: contain;
+  overflow-y: hidden;
+  background-color: #2569a5;
   margin: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
 main {
-  background: url("./images/grid.png") repeat;
+  background-image: url("./images/grid.png");
+  background-repeat: repeat;
+  background-color: #f0f8ff;
   text-align: center;
-  width: 100%;
-  
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 1100px;
+  height: 650px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   padding: 1em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  padding-left: 29px;
 }
 
 h1 {
@@ -54,52 +56,16 @@ h1 {
 
 #game-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  gap: 20px;
-}
-
-.board-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* justify-content: space-between; */
+  gap: 24px;
+  margin: 1em auto;
+  flex-direction: row;
 }
 
 .board {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   margin-top: 30px;
-    /* background-color: #87cefa; */
-  /* border-radius: 255px 3px 225px 3px / 0px 225px 3px 255px; */
-  /* border: solid 3px #1e51afc9; */
-  /* width: 330px;
-  height: 330px; */
-  /* background-image: linear-gradient(
-      0deg,
-      transparent 24%,
-      rgba(0, 0, 255, 0.1) 25%,
-      rgba(0, 0, 255, 0.1) 26%,
-      transparent 27%,
-      transparent 74%,
-      rgba(0, 0, 255, 0.1) 75%,
-      rgba(0, 0, 255, 0.1) 76%,
-      transparent 77%,
-      transparent
-    ),
-    linear-gradient(
-      90deg,
-      transparent 24%,
-      rgba(0, 0, 255, 0.1) 25%,
-      rgba(0, 0, 255, 0.1) 26%,
-      transparent 27%,
-      transparent 74%,
-      rgba(0, 0, 255, 0.1) 75%,
-      rgba(0, 0, 255, 0.1) 76%,
-      transparent 77%,
-      transparent
-    ); */
-  /* background-size: 30px 30px; */
   width: 340px;
   height: 340px;
   background-image: url("./images/field.png");
@@ -115,14 +81,10 @@ h1 {
   grid-template-columns: repeat(10, 1fr);
 }
 
-.cell {
+/* .cell { */
   /* border: 1px solid #d0dfe2; */
   /* background-color: #EFF8FF; */
-}
-
-.cell.ship {
-  background-color: #6495ed;
-}
+/* } */
 
 .cell.hide {
   background-color: rgb(198, 203, 205);
@@ -132,15 +94,6 @@ h1 {
   background-image: url("./images/sprite.png");
   background-repeat: no-repeat;
   background-position: -410px -50px;
-}
-
-@keyframes fire-glow {
-  0% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 
 .cell.miss {
@@ -161,6 +114,7 @@ h1 {
 }
 
 button {
+  display: inline-block;
   outline: none;
   box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, 0.2);
   border-radius: 255px 21px 225px 31px / 74px 225px 90px 255px;
@@ -178,12 +132,31 @@ button {
   display: flex;
   justify-content: right;
   gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.ship {
-  /* width: 30px; */
-  /* height: 30px; */
+.sounds {
+  display: flex;
+  justify-content: right;
+  gap: 0.5rem;
+}
+
+.ship.visible{
   background-color: #6495ed;
+}
+
+.ship-bordered {
+  position: absolute;
+  height: 35px;
+  background-image: url("./images/sprite.png");
+  background-repeat: no-repeat;
+  display: flex;
+  z-index: -1;
+}
+
+.vertical {
+  transform: rotate(90deg);
+  transform-origin: 17.5px 17.5px;
 }
 
 /* List of enemy ships */
@@ -191,13 +164,16 @@ button {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 35px;
-  margin-top: 4em;
+  gap: 32px;
+  margin-top: 60px;
+  width: 30%;
 }
 
 .ships-list-item {
+  position: relative;
+  top: 15px;
   display: flex;
-  gap: 35px;
+  gap: 32px;
 }
 
 .ship-icon {
@@ -208,7 +184,7 @@ button {
 }
 
 .fourdeck {
-  width: 134px;
+  width: 140px;
   background-position: 0 0;
 }
 
@@ -240,8 +216,6 @@ button {
   background-position: -410px -50px;
 }
 
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+.hidden {
+  display: none;
 }
