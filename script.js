@@ -431,6 +431,7 @@ class Game {
       event.preventDefault();
       const row = parseInt(event.target.getAttribute("data-row"));
       const col = parseInt(event.target.getAttribute("data-col"));
+      this.playerBoard.handleShipPlacement(row, col);
       this.playerBoard.rotateShip(row, col);
     });
    
