@@ -279,11 +279,15 @@ button {
   background-color: #ffffff;
   margin: 15% auto;
   padding: 20px;
-  width: 80%;
+  width: 40%;
   z-index: 2000;
   border-radius: 7px;
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2),
     0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+}
+.modal-content button{
+
+  margin: 1rem;
 }
 
 #modalRules {
@@ -346,8 +350,8 @@ nav {
   justify-content: space-evenly;
   align-items: center;
   z-index: 7000;
-  width: 400px;
-  height: 500px;
+  width: 200px;
+  height: 380px;
   background-image: url(./images/grid.png);
   background-repeat: repeat;
   background-color: #f0f8ff;
@@ -358,6 +362,14 @@ nav {
   transform-style: preserve-3d;
   box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.1);
   animation: openMenu 0.5s forwards;
+  filter: brightness(90%);
+  border-radius: 2rem;
+
+}
+
+#start
+{
+  margin: 1rem;
 }
 
 @keyframes openMenu {
