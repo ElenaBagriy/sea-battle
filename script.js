@@ -11,6 +11,7 @@ const usernamePlace = document.getElementById("username-place");
 const shipsListElement = document.querySelector(".ships-list");
 const soundsElement = document.querySelector(".sounds");
 const modal = document.querySelector("#modalWindow");
+const modalName = document.querySelector("#modalName");
 const modalText = document.querySelector("#modal-text");
 const rulesButton = document.querySelector("#rules");
 const modalRules = document.querySelector("#modalRules");
@@ -65,13 +66,14 @@ const sfx = {
 
 // Choosing user name
 function changeName(){
-  let username = prompt("Enter your name");
-  if (username === null || username === "") {
-    usernamePlace.textContent = "Player";
-  } else {
-    document.getElementById("username-place").innerHTML = username;
-  }
+  modalName.style.display = "block";
 };
+
+function setName() {
+  var userName = document.getElementById("userName").value;
+  document.getElementById("username-place").innerHTML = userName;
+  modalName.style.display = "none";
+}
 
 // Music
 let aud = document.getElementById("myAudio");
@@ -950,4 +952,6 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.style.display = "none";
   });
 });
+
+
 
