@@ -260,7 +260,8 @@ button {
 
 #overlay,
 #modalWindow,
-#modalRulesContainer {
+#modalRulesContainer,
+#modalName {
   display: none;
   position: fixed;
   z-index: 2000;

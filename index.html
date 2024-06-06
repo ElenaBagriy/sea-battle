@@ -43,28 +43,38 @@
                 </div>
 
                 <button id="userNameButton" onclick="changeName()">Name</button>
-        <button id="restartButton" id="restartButton">Restart</button>
-            </div>
-        </nav>
 
-        <button id="rules"><img src="images/rules.png" alt="rules" style="width: 40px;"></button>
-        <div id="modalRulesContainer">
-            <div id="modalRules">
-                <pre>Goal: Sink all your opponent's ships before they sink yours.
+
+                <button id="restartButton" id="restartButton">Restart</button>
+                    </div>
+                </nav>
+
+                <div id="modalName">
+                    <div class="modal-content">
+                        <input type="text" placeholder="Enter name" id="userName"><br>
+                        <button id="manualPlacingButton" onclick="setName()">Play</button>
+                    </div>
+                </div>
+
+                <button id="rules"><img src="images/rules.png" alt="rules" style="width: 40px;"></button>
+                <div id="modalRulesContainer">
+                    <div id="modalRules">
+                    <pre>Goal: 
+    Sink all your opponent's ships before they sink yours.
                     
 Placing Ships: 
-Left Click: Place ships horizontally. 
-Right Click: Place ships vertically.
-Ships cannot overlap or go outside the grid.
+    Left Click: Place ships horizontally. 
+    Right Click: Place ships vertically.
+    Ships cannot overlap or go outside the grid.
 
 Gameplay:
-Right Click: Mark cells to keep track of your guesses.
-Players take turns to attack by clicking on a grid coordinate. 
-Hits and misses are marked on the grid.
-A ship is sunk when all its squares are hit.
+    Right Click: Mark cells to keep track of your guesses.
+    Players take turns to attack by clicking on a grid coordinate. 
+    Hits and misses are marked on the grid.
+    A ship is sunk when all its squares are hit.
 
 Winning:
-The first player to sink all opponent's ships wins.</pre>
+    The first player to sink all opponent's ships wins.</pre>
             </div>
         </div>
         
