@@ -346,3 +346,35 @@ nav {
 .board.enemy-board .cell:hover {
   cursor: url("images/Cursor.png") 10 10, auto;
 }
+
+section {
+  position: relative;
+}
+
+.number-row {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  justify-content: center;
+  align-items: flex-end;
+  width: 330px;
+  height: 33px;
+  left: 0px;
+  bottom: 340px;
+  font-size: 18px ;
+  font-style: italic;
+}
+
+.letter-row {
+  position: absolute;
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  justify-content: flex-end;
+  align-items: center;
+  width: 33px;
+  height: 330px;
+  left: -38px;
+  bottom: 5px;
+  font-size: 18px ;
+  font-style: italic;
+}
