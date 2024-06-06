@@ -10,6 +10,8 @@ const currentTurn = document.getElementById("current-turn");
 const usernamePlace = document.getElementById("username-place");
 const shipsListElement = document.querySelector(".ships-list");
 const soundsElement = document.querySelector(".sounds");
+const modal = document.querySelector("#modalWindow");
+const modalText = document.querySelector("#modal-text");
 
 
 let sounds = false;
@@ -793,10 +795,12 @@ class Game {
 
   finish(winner) {
     if (winner === 'computer') {
-      currentTurn.textContent ='Unfortunately, you lost the game.'
+      modalText.textContent ='Unfortunately, you lost the game.';
+      modal.style.display = "block";
     }
     else {
-      currentTurn.textContent ='Congratulations! You`ve won the game!'
+      modalText.textContent ='Congratulations! You`ve won the game!';
+      modal.style.display = "block";
     }
     this.removeListeners();
   }
@@ -838,9 +842,6 @@ startButton.addEventListener('click',() => {
 
 
 //Modal Window
-var modal = document.querySelector("#modalWindow");
-var span = document.getElementsByClassName("close")[0];
-
 window.onload = function() {
     modal.style.display = "block";
 }
