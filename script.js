@@ -12,6 +12,9 @@ const shipsListElement = document.querySelector(".ships-list");
 const soundsElement = document.querySelector(".sounds");
 const modal = document.querySelector("#modalWindow");
 const modalText = document.querySelector("#modal-text");
+const rulesButton = document.querySelector("#rules");
+const modalRules = document.querySelector("#modalRules");
+const modalRulesContainer = document.querySelector("#modalRulesContainer");
 
 
 let sounds = false;
@@ -871,23 +874,48 @@ restartButton.onclick = function() {
   modal.style.display = "block";
 }
 
+window.onclick = function(event) {
+  if (event.target == modalRulesContainer) {
+    modalRulesContainer.style.display = "none";
+  }
+}
+
 manualPlacingButton.onclick = function() {
     modal.style.display = "none";
 }
 
-// updated the block about showing menu just to get styling the menu
-document.addEventListener('DOMContentLoaded', () => {
-  const burger = document.getElementById('burger');
-  const menu = document.getElementById('menu');
-  const button = document.querySelectorAll('button');
+rulesButton.onclick = function() {
+  
+  if (modalRulesContainer.style.display === "none" || modalRulesContainer.style.display === "") {
+    modalRulesContainer.style.display = "block";
+  } else {
+    modalRulesContainer.style.display = "none";
+  }
+}
 
-  burger.addEventListener('click', () => {
-    menu.classList.toggle('show-menu');
+// updated the block about showing menu just to get styling the menu
+document.addEventListener("DOMContentLoaded", () => {
+  const burger = document.getElementById("burger");
+  const menu = document.getElementById("menu");
+  const button = document.querySelectorAll("button");
+  const overlay = document.getElementById("overlay");
+
+  burger.addEventListener("click", () => {
+    menu.classList.toggle("show-menu");
+    overlay.style.display =
+      overlay.style.display === "block" ? "none" : "block";
   });
 
-  button.forEach(button => {
-    button.addEventListener('click', () => {
-      menu.classList.remove('show-menu');
+  button.forEach((button) => {
+    button.addEventListener("click", () => {
+      menu.classList.remove("show-menu");
+      overlay.style.display = "none";
     });
   });
+
+  overlay.addEventListener("click", () => {
+    menu.classList.remove("show-menu");
+    overlay.style.display = "none";
+  });
 });
+

@@ -1,3 +1,4 @@
+
 /* Global rule */
 @import url("https://fonts.cdnfonts.com/css/hand-drawn-shapes");
 * {
@@ -335,4 +336,3 @@ nav {
 }
 .board.enemy-board .cell:hover{
   cursor: url('images/Cursor.png') 10 10, auto;
-} 
