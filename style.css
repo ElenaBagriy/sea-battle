@@ -41,6 +41,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  color: #00008b;
 }
 
 main {
@@ -311,3 +312,6 @@ nav {
     transform: skew(0deg) perspective(1000px) rotateY(0deg);
   }
 }
+.board.enemy-board .cell:hover{
+  cursor: url('images/Cursor.png') 10 10, auto;
+} 
