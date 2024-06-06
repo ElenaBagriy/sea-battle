@@ -16,6 +16,7 @@
 </head>
 
 <body>
+    
   <main>
         <div id="modalWindow">
             <div class="modal-content">
@@ -24,30 +25,33 @@
                 <button id="manualPlacingButton">Manually</button>
             </div>
         </div>
-
-        <nav>
-            <div class="burger" id="burger"><img src="images/Settings.png" style="width: 50px;"></div>
-            <div class="menu" id="menu">
-                <audio id="myAudio">
-                    <source src="music.mp3" type="audio/mp3">
-                </audio>
-                <div class="music">
-                    <p>Music:</p>
-                    <button onclick="play()" type="button">On</button>
-                    <button onclick="pause()" type="button">Off</button>
-                </div>
-                <div class="sounds">
-                    <p>Sounds:</p>
-                    <button class="onSounds" type="button" style="border: 0; background-color: transparent;"><img src="images/Soundon.png" alt="Soundon" style="width: 40px;"></button>
-                    <button class="offSounds" type="button" style="border: 0; background-color: transparent;"><img src="images/Soundoff.png" alt="Soundoff" style="width: 40px;"></button>
-                </div>
-
-                <button id="userNameButton" onclick="changeName()">Name</button>
-
-
-                <button id="restartButton" id="restartButton">Restart</button>
+        <header>
+            <nav>
+                <div class="burger" id="burger"><img src="images/Settings.png" style="width: 50px;"></div>
+                <div class="menu" id="menu">
+                    <audio id="myAudio">
+                        <source src="music.mp3" type="audio/mp3">
+                    </audio>
+                    <div class="music">
+                        <p>Music:</p>
+                        <button onclick="play()" type="button">On</button>
+                        <button onclick="pause()" type="button">Off</button>
                     </div>
-                </nav>
+                    <div class="sounds">
+                        <p>Sounds:</p>
+                        <button class="onSounds" type="button" style="border: 0; background-color: transparent;"><img src="images/Soundon.png" alt="Soundon" style="width: 40px;"></button>
+                        <button class="offSounds" type="button" style="border: 0; background-color: transparent;"><img src="images/Soundoff.png" alt="Soundoff" style="width: 40px;"></button>
+                    </div>
+    
+                    <button id="userNameButton" onclick="changeName()">Name</button>
+    
+    
+                    <button id="restartButton" id="restartButton">Restart</button>
+                        </div>
+            </nav>
+            <h1>Sea battle</h1>
+            <button id="rules"><img src="images/rules.png" alt="rules" style="width: 40px;"></button>
+        </header>
 
                 <div id="modalName">
                     <div class="modal-content">
@@ -56,7 +60,7 @@
                     </div>
                 </div>
 
-                <button id="rules"><img src="images/rules.png" alt="rules" style="width: 40px;"></button>
+                
                 <div id="modalRulesContainer">
                     <div id="modalRules">
                     <pre>Goal: 
@@ -81,9 +85,9 @@ Winning:
         
         <div id="overlay"></div>
 
-        <h1>Sea battle</h1>
+        
         <div id="game-container">
-            <section>
+            <section class="player-section">
                 <div class="letter-row">
                     <div>A</div>
                     <div>B</div>
@@ -112,7 +116,7 @@ Winning:
                 <span class="player-score">0/20</span>
                 <div class="board player-board"> </div>
             </section>
-            <section>
+            <section class="enemy-section">
                 <div class="letter-row">
                     <div>A</div>
                     <div>B</div>
