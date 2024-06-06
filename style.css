@@ -1,3 +1,4 @@
+
 /* Global rule */
 @import url("https://fonts.cdnfonts.com/css/hand-drawn-shapes");
 * {
@@ -69,7 +70,6 @@ h1 {
 
 #game-container {
   display: flex;
-  /* justify-content: space-between; */
   gap: 24px;
   margin: 1em auto;
   flex-direction: row;
@@ -78,7 +78,7 @@ h1 {
 .board {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
-  margin-top: 2em;
+  margin-top: 21px;
   width: 340px;
   height: 340px;
   background-image: url("./images/field.png");
@@ -178,13 +178,12 @@ button {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-top: 76px;
+  margin-top: 63px;
   width: 30%;
 }
 
 .ships-list-item {
   position: relative;
-  top: 15px;
   display: flex;
   gap: 32px;
 }
@@ -337,4 +336,3 @@ nav {
 }
 .board.enemy-board .cell:hover{
   cursor: url('images/Cursor.png') 10 10, auto;
-} 

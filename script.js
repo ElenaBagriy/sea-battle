@@ -16,15 +16,16 @@ const rulesButton = document.querySelector("#rules");
 const modalRules = document.querySelector("#modalRules");
 const modalRulesContainer = document.querySelector("#modalRulesContainer");
 
+
 let sounds = false;
 
-soundsElement.addEventListener("click", (e) => {
-  if (e.target.classList.contains("onSounds")) {
-    sounds = true;
+soundsElement.addEventListener('click', (e)=> {
+  if(e.target.classList.contains('onSounds')) {
+    sounds = true
   } else {
-    sounds = false;
-  }
-});
+  sounds = false;
+}
+})
 
 const fieldSize = 10;
 const shipLengths = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
@@ -40,7 +41,7 @@ function clearAllTimeouts() {
   for (const id of timeouts) {
     clearTimeout(id);
   }
-  timeouts.length = 0; // Очистить массив
+  timeouts.length = 0; 
 }
 
 // Sounds
@@ -51,22 +52,26 @@ const sfx = {
     ],
   }),
   explode: new Howl({
-    src: ["https://cdn.pixabay.com/audio/2023/07/14/audio_23ab712cd9.mp3"],
+    src: [
+      "https://cdn.pixabay.com/audio/2023/07/14/audio_23ab712cd9.mp3",
+    ],
   }),
   destroy: new Howl({
-    src: ["https://cdn.pixabay.com/audio/2022/03/10/audio_54e0895d4f.mp3"],
+    src: [
+      "https://cdn.pixabay.com/audio/2022/03/10/audio_54e0895d4f.mp3",
+    ],
   }),
 };
 
 // Choosing user name
-function changeName() {
+function changeName(){
   let username = prompt("Enter your name");
   if (username === null || username === "") {
     usernamePlace.innerHTML = "Player";
   } else {
     document.getElementById("username-place").innerHTML = username;
   }
-}
+};
 
 // Music
 let aud = document.getElementById("myAudio");
@@ -76,7 +81,7 @@ function play() {
 function pause() {
   aud.pause();
 }
-// aud.play();
+
 
 // Ship constructor
 class Ship {
@@ -101,6 +106,7 @@ class Ship {
   initCoords() {
     const { startRow, startCol, length, direction } = this;
     this.shipCoords = [];
+    this.safetyCells = [];
 
     if (direction === "horizontal") {
       for (let i = 0; i < length; i++) {
@@ -157,17 +163,17 @@ class Ship {
 
 // Board constructor
 class Board {
-  constructor(fieldSize, fieldElement, manual) {
+  constructor( fieldSize, fieldElement, manual) {
     this.fieldSize = fieldSize;
     this.element = fieldElement;
-    this.manualEnabled = manual || false;
+    this.manualEnabled = manual;
     this.ships = [];
     this.initShips();
     this.render();
   }
 
   initShips() {
-    if (!this.manualEnabled) {
+    if(!this.manualEnabled) {
       shipLengths.forEach((length) => {
         const ship = this.createShip(length);
         this.ships.push(ship);
@@ -198,38 +204,46 @@ class Board {
         placed = true;
       }
     }
-    placed && ship.player === "human" && this.showShip(ship, this.element);
+    placed && ship.player === 'human' && this.showShip (ship, this.element)
 
     return ship;
   }
 
-  showShip(ship, element) {
+  showShip (ship) {
     const div = document.createElement("div");
     let padding = 5;
     let cellSize = 33;
 
-    let classname = `ship-bordered ${ship.direction} ${ship.startRow} ${ship.startCol}`;
+    let classname = `ship-bordered ${ship.direction}`;
     switch (ship.length) {
       case 4:
-        classname += " fourdeck";
+        classname += ' fourdeck'
         break;
-      case 3:
-        classname += " tripledeck";
+        case 3:
+          classname += ' tripledeck'
         break;
-      case 2:
-        classname += " doubledeck";
+        case 2:
+          classname += ' doubledeck'
         break;
-      case 1:
-        classname += " singledeck";
+        case 1:
+          classname += ' singledeck'
         break;
       default:
         break;
     }
     div.className = classname;
-    div.style.cssText = `left:${ship.startCol * cellSize + padding}px; top:${
-      ship.startRow * cellSize + padding
-    }px;`;
-    element.appendChild(div);
+    div.style.cssText = `left:${ship.startCol * cellSize + padding}px; top:${ship.startRow * cellSize+ padding}px;`;
+    div.setAttribute('data-row', ship.startRow);
+    div.setAttribute('data-col', ship.startCol);
+    this.element.appendChild(div);
+  }
+
+  removeShipElementFromDOM (ship) {
+
+    const shipToDeleteElement = document.querySelector(`div.ship-bordered.${ship.direction}[data-row="${ship.startRow}"][data-col="${ship.startCol}"]`);
+    if (shipToDeleteElement) {
+      shipToDeleteElement.remove();
+    }
   }
 
   // Check if we can place ships
@@ -237,24 +251,17 @@ class Board {
     const newCoords = ship.shipCoords;
 
     if (manual) {
-      const isValideRow =
-        ship.startRow + (ship.direction === "horizontal" ? 0 : ship.length) >=
-          0 &&
-        ship.startRow + (ship.direction === "horizontal" ? 0 : ship.length) <
-          this.fieldSize;
-      const isValideCol =
-        ship.startCol + (ship.direction === "vertical" ? 0 : ship.length) >=
-          0 &&
-        ship.startCol + (ship.direction === "vertical" ? 0 : ship.length) <
-          this.fieldSize;
+      const isValideRow = (ship.startRow + (ship.direction === "horizontal" ? 0 : ship.length)) >=0 && (ship.startRow  + (ship.direction === "horizontal" ? 0 : ship.length)) <= this.fieldSize;
+      const isValideCol = (ship.startCol + (ship.direction === "vertical" ? 0 : ship.length)) >=0 && (ship.startCol + (ship.direction === "vertical" ? 0 : ship.length)) <= this.fieldSize;
 
       if (!isValideRow || !isValideCol) {
-        currentTurn.textContent = "Choose another place";
+        currentTurn.textContent = 'Choose another place';
         return false;
       }
-    }
+    };
 
     if (this.ships.length) {
+
       const isOverlap = this.ships.some((ship) =>
         ship.safetyCells.some((cell) =>
           newCoords.some(
@@ -262,7 +269,8 @@ class Board {
           )
         )
       );
-      currentTurn.textContent = "Choose another place";
+
+      currentTurn.textContent = 'Choose another place';
       return !isOverlap;
     }
     return true;
@@ -289,7 +297,7 @@ class Board {
       }
       html += "</div>";
     }
-    this.element.insertAdjacentHTML("beforeend", html);
+    this.element.insertAdjacentHTML("beforeend", html)
   }
 
   handleShipPlacement(row, col) {
@@ -300,75 +308,75 @@ class Board {
       const ship = new Ship(this.element, length, row, col, direction);
 
       if (this.canPlaceShip(ship)) {
-        this.ships.push(ship);
-        // this.showShip(ship);
 
-        ship.shipCoords.map(({ row, col }) => {
-          const target = document.querySelector(
-            `div[data-row="${row}"][data-col="${col}"]`
-          );
-          target.classList.add("ship", "visible");
-          currentTurn.textContent = "Place next ship";
-        });
+          this.ships.push(ship);
+          this.showShip(ship);
+
+          ship.shipCoords.map(({row,col})=> {
+          const target = document.querySelector(`div[data-row="${row}"][data-col="${col}"]`)
+          target.classList.add('ship')
+
+          currentTurn.textContent = 'Place next ship';
+
+        })
       }
     }
     if (this.ships.length === shipLengths.length) {
-      currentTurn.textContent = "You placed all ships!";
-      startButton.classList.remove("hidden");
+      currentTurn.textContent = 'You placed all ships!';
+      startButton.classList.remove('hidden');
     }
+ 
   }
 
   rotateShip(row, col) {
     let indexToDelete;
-    const ship = this.ships.find((s, index) => {
+    const ship = this.ships.find((s, index) =>{
       indexToDelete = index;
-      return s.shipCoords.some(
-        (coord) => coord.row === row && coord.col === col
-      );
-    });
+      return s.shipCoords.some((coord) => coord.row === row && coord.col === col)
+    }
+    );
 
     if (ship) {
-      ship.shipCoords.map(({ row, col }) => {
-        const target = document.querySelector(
-          `div[data-row="${row}"][data-col="${col}"]`
-        );
-        target.classList.remove("ship", "visible");
-      });
+      ship.shipCoords.map(({row,col})=> {
+        const target = document.querySelector(`div[data-row="${row}"][data-col="${col}"]`)
+        target.classList.remove('ship')
+        })
+        this.removeShipElementFromDOM(ship);
       ship.rotate(ship);
       this.ships.splice(indexToDelete, 1);
 
       if (this.canPlaceShip(ship)) {
-        ship.shipCoords.map(({ row, col }) => {
-          const target = document.querySelector(
-            `div[data-row="${row}"][data-col="${col}"]`
-          );
-          target.classList.add("ship", "visible");
-        });
-        this.ships.push(ship);
+        ship.shipCoords.map(({row,col})=> {
+          const target = document.querySelector(`div[data-row="${row}"][data-col="${col}"]`)
+          target.classList.add('ship')
+          })
+          this.showShip(ship);
+        this.ships.push(ship)
+        
+        
       } else {
-        currentTurn.textContent = "Can not rotate the ship on this place";
+        currentTurn.textContent = 'Can not rotate the ship on this place';
         ship.rotate(ship);
-        ship.shipCoords.map(({ row, col }) => {
-          const target = document.querySelector(
-            `div[data-row="${row}"][data-col="${col}"]`
-          );
-          target.classList.add("ship", "visible");
-        });
-        this.ships.push(ship);
+        ship.shipCoords.map(({row,col})=> {
+          const target = document.querySelector(`div[data-row="${row}"][data-col="${col}"]`)
+          target.classList.add('ship')
+          })
+          this.showShip(ship);
+        this.ships.push(ship)
       }
     }
   }
 }
 
 class Game {
-  constructor(manual, allShipsPlaced, shipLengths, fieldSize) {
+  constructor(manual, allShipsPlaced, shipLengths, fieldSize ) {
     this.startgame = false;
 
     this.fieldSize = fieldSize;
     this.shipLengths = shipLengths;
     this.allShipsPlaced = allShipsPlaced;
     this.manualPlacingEnabled = manual;
-
+    
     this.playerTurn = true;
     this.playerBoardElement = document.querySelector(".player-board");
     this.enemyBoardElement = document.querySelector(".enemy-board");
@@ -377,12 +385,8 @@ class Game {
     this.playerCounter = 0;
     this.enemyCounter = 0;
 
-    this.playerBoard = new Board(
-      this.fieldSize,
-      this.playerBoardElement,
-      this.manualPlacingEnabled
-    );
-    this.enemyBoard = new Board(this.fieldSize, this.enemyBoardElement);
+    this.playerBoard = new Board(this.fieldSize, this.playerBoardElement, this.manualPlacingEnabled);
+    this.enemyBoard = new Board(this.fieldSize, this.enemyBoardElement, false);
 
     this.init();
   }
@@ -390,27 +394,32 @@ class Game {
   init() {
     if (this.allShipsPlaced) {
       this.playerTurn = Math.random() > 0.5;
-
-      if (!this.playerTurn) {
-        currentTurn.textContent = "The computer shoots first";
+  
+      if(!this.playerTurn) {
+        currentTurn.textContent = 'The computer shoots first';
         customSetTimeout(() => this.computerMove(), 2000);
-      } else {
-        currentTurn.textContent = "Your turn!";
       }
-
+      else {
+        currentTurn.textContent = 'Your turn!';
+      }
+  
       this.handleCellClickBound = this.handleCellClick.bind(this);
       this.handleRightClickBound = this.handleRightClick.bind(this);
-
-      this.addClickListener(this.enemyBoardElement, this.handleCellClickBound);
+  
+      this.addClickListener(
+        this.enemyBoardElement,
+        this.handleCellClickBound
+      );
       this.addRightClickListener(
         this.enemyBoardElement,
         this.handleRightClickBound
       );
+
     }
 
     if (this.manualPlacingEnabled) {
-      this.manualPlacing();
-    }
+      this.manualPlacing()
+    } 
   }
 
   stop() {
@@ -427,12 +436,12 @@ class Game {
   start() {
     this.allShipsPlaced = true;
     this.init();
-  }
+  };
 
   manualPlacing() {
-    this.manualPlacingEnabled = true;
-
+    
     this.playerBoardElement.addEventListener("click", (event) => {
+
       if (this.manualPlacingEnabled) {
         const row = parseInt(event.target.getAttribute("data-row"));
         const col = parseInt(event.target.getAttribute("data-col"));
@@ -444,9 +453,10 @@ class Game {
       event.preventDefault();
       const row = parseInt(event.target.getAttribute("data-row"));
       const col = parseInt(event.target.getAttribute("data-col"));
-      this.playerBoard.handleShipPlacement(row, col);
+      // this.playerBoard.handleShipPlacement(row, col);
       this.playerBoard.rotateShip(row, col);
     });
+   
   }
 
   addClickListener(boardElement, handler) {
@@ -467,7 +477,7 @@ class Game {
 
   handleCellClick(event) {
     if (this.manualPlacingEnabled && !this.allShipsPlaced) {
-      currentTurn.textContent = "Place the ships first!";
+      currentTurn.textContent = "Place the ships first!"
       return alert("Place the ships first");
     }
 
@@ -495,18 +505,17 @@ class Game {
         this.playerCounter += 1;
         playerScoreElement.textContent = `${this.playerCounter}/20`;
         target.classList.add("hit");
-        currentTurn.textContent =
-          "Congratulations! You damaged an enemy ship. Your shot.";
+        currentTurn.textContent = 'Congratulations! You damaged an enemy ship. Your shot.';
 
+        
         if (ship.isDestroyed) {
           sounds && sfx.destroy.play();
-          this.showDestroyedIcons(ship, "red-cross");
-          currentTurn.textContent =
-            "Congratulations! You destroyed an enemy ship. Your shot.";
+          this.showDestroyedIcons(ship, "red-cross")
+          currentTurn.textContent = 'Congratulations! You destroyed an enemy ship. Your shot.';
         }
 
         if (this.playerCounter === 20) {
-          this.finish("player");
+          this.finish('player');
           return true;
         }
         return true;
@@ -570,45 +579,45 @@ class Game {
 
       this.availableCells.push(cell);
     });
+
   }
 
   computerMove(hit, isDestroyed, coords) {
-    if (
-      this.availableCells.length > 0 &&
-      this.availableCells.length <= 4 &&
-      !isDestroyed
-    ) {
+
+    if (this.availableCells.length > 0 && this.availableCells.length <=4 && !isDestroyed) {
+
       if (coords) {
         this.getAvailableCells(coords);
       }
 
       this.availableCells = this.availableCells.filter((availableCell) => {
-        return (
-          !availableCell.classList.contains("hit") &&
-          !availableCell.classList.contains("miss") &&
-          !availableCell.classList.contains("marked")
-        );
+            return (
+              !availableCell.classList.contains("hit") &&
+              !availableCell.classList.contains("miss") &&
+              !availableCell.classList.contains("marked")
+            );  
       });
     } else if (hit && !isDestroyed) {
-      this.availableCells = [];
-      this.getAvailableCells(coords);
-    } else {
-      this.availableCells = [];
-      for (let row = 0; row < this.fieldSize; row++) {
-        for (let col = 0; col < this.fieldSize; col++) {
-          const cell = this.playerBoardElement.querySelector(
-            `.cell[data-row="${row}"][data-col="${col}"]`
-          );
-          if (
-            !cell.classList.contains("hit") &&
-            !cell.classList.contains("miss") &&
-            !cell.classList.contains("marked")
-          ) {
-            this.availableCells.push(cell);
+          this.availableCells = [];
+          this.getAvailableCells(coords);
+  
+      } else {
+        this.availableCells = [];
+        for (let row = 0; row < this.fieldSize; row++) {
+          for (let col = 0; col < this.fieldSize; col++) {
+            const cell = this.playerBoardElement.querySelector(
+              `.cell[data-row="${row}"][data-col="${col}"]`
+            );
+            if (
+              !cell.classList.contains("hit") &&
+              !cell.classList.contains("miss") &&
+              !cell.classList.contains("marked")
+            ) {
+              this.availableCells.push(cell);
+            }
           }
         }
       }
-    }
 
     if (this.availableCells.length === 0) return;
 
@@ -629,22 +638,17 @@ class Game {
         this.enemyCounter += 1;
         enemyScoreElement.textContent = `${this.enemyCounter}/20`;
         target.classList.add("hit");
-        currentTurn.textContent =
-          "The computer has hit your ship. Computer shot";
+        currentTurn.textContent = 'The computer has hit your ship. Computer shot';
         if (ship.isDestroyed) {
-          currentTurn.textContent =
-            "The computer destroyed your ship. Computer shot";
+          currentTurn.textContent = 'The computer destroyed your ship. Computer shot';
         }
 
         this.markSafetyCells(ship, ship.isDestroyed, coords).then(() => {
           if (this.enemyCounter === 20) {
-            this.finish("computer");
+            this.finish('computer');
             return true;
           }
-          customSetTimeout(
-            () => this.computerMove("hit", ship.isDestroyed, coords),
-            1000
-          );
+          customSetTimeout(() => this.computerMove('hit', ship.isDestroyed, coords ), 1000);
         });
         return true;
       }
@@ -745,67 +749,54 @@ class Game {
   showDestroyedIcons(ship, iconClass) {
     const enemyBoard = this.enemyBoard;
 
-    const shipsListElements = document.querySelectorAll(".ship-icon");
+    const shipsListElements = document.querySelectorAll('.ship-icon')
 
     for (const element of shipsListElements) {
       switch (ship.length) {
         case 4:
-          if (element.classList.contains("fourdeck") && ship.isDestroyed) {
-            for (let i = 1; i <= ship.length; i++) {
-              customSetTimeout(() => {
-                fn(element);
-                enemyBoard.showShip(ship, this.enemyBoardElement);
-              }, i * 200);
-            }
-          }
-          break;
-        case 3:
-          if (
-            element.classList.contains("tripledeck") &&
-            ship.isDestroyed &&
-            !element.querySelector("span")
-          ) {
+          if(element.classList.contains('fourdeck') && ship.isDestroyed) {
             for (let i = 1; i <= ship.length; i++) {
               customSetTimeout(() => {
                 fn(element);
                 enemyBoard.showShip(ship);
               }, i * 200);
             }
-            return;
           }
           break;
-        case 2:
-          if (
-            element.classList.contains("doubledeck") &&
-            ship.isDestroyed &&
-            !element.querySelector("span")
-          ) {
-            for (let i = 1; i <= ship.length; i++) {
-              customSetTimeout(() => {
-                fn(element);
-                enemyBoard.showShip(ship);
-              }, i * 200);
+          case 3:
+            if(element.classList.contains('tripledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                customSetTimeout(() => {
+                  fn(element);
+                  enemyBoard.showShip(ship);
+                }, i * 200);
+              }
+              return;
             }
-            return;
-          }
           break;
-        case 1:
-          if (
-            element.classList.contains("singledeck") &&
-            ship.isDestroyed &&
-            !element.querySelector("span")
-          ) {
-            for (let i = 1; i <= ship.length; i++) {
-              customSetTimeout(() => {
-                fn(element);
-                enemyBoard.showShip(ship);
-              }, i * 200);
+          case 2:
+            if(element.classList.contains('doubledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                customSetTimeout(() => {
+                  fn(element);
+                  enemyBoard.showShip(ship);
+                }, i * 200);
+              }
+              return;
             }
-            return;
-          }
           break;
-        default:
-          "";
+          case 1:
+            if(element.classList.contains('singledeck') && ship.isDestroyed && !element.querySelector('span')) {
+              for (let i = 1; i <= ship.length; i++) {
+                customSetTimeout(() => {
+                  fn(element);
+                  enemyBoard.showShip(ship);
+                }, i * 200);
+              }
+              return;
+            }
+          break;
+        default: ""
           break;
       }
     }
@@ -818,22 +809,23 @@ class Game {
 
   removeListeners() {
     this.removeClickListener(this.enemyBoardElement, this.handleCellClickBound);
-    this.removeRightClickListener(
-      this.enemyBoardElement,
-      this.handleRightClickBound
-    );
+    this.removeRightClickListener(this.enemyBoardElement, this.handleRightClickBound);
   }
 
   finish(winner) {
-    if (winner === "computer") {
-      modalText.textContent = "Unfortunately, you lost the game.";
+    if (winner === 'computer') {
+      modalText.textContent ='Unfortunately, you lost the game.';
       modal.style.display = "block";
-    } else {
-      modalText.textContent = "Congratulations! You`ve won the game!";
+    }
+    else {
+      modalText.textContent ='Congratulations! You`ve won the game!';
+      modal.style.display = "block";
     }
     this.removeListeners();
   }
 }
+
+
 
 // Initialize game.
 let game;
@@ -841,7 +833,7 @@ let manual = false;
 let allShipsPlaced = true;
 
 manualPlacingButton.addEventListener("click", () => {
-  startButton.classList.add("hidden");
+  startButton.classList.add('hidden')
   if (game) {
     game.stop();
   }
@@ -849,11 +841,12 @@ manualPlacingButton.addEventListener("click", () => {
   allShipsPlaced = false;
 
   game = new Game(manual, allShipsPlaced, shipLengths, fieldSize);
-  currentTurn.textContent = "Place your first ship";
-});
+  currentTurn.textContent = 'Place your first ship';
+})
 
 randomPlacingButton.addEventListener("click", () => {
-  startButton.classList.add("hidden");
+  startButton.classList.add('hidden')
+  modal.style.display = "none";
   if (game) {
     game.stop();
   }
@@ -861,24 +854,25 @@ randomPlacingButton.addEventListener("click", () => {
   allShipsPlaced = true;
 
   game = new Game(manual, allShipsPlaced, shipLengths, fieldSize);
-});
+})
 
-startButton.addEventListener("click", () => {
+startButton.addEventListener('click',() => {
   game.start(true);
-});
+})
+
 
 //Modal Window
-window.onload = function () {
-  modal.style.display = "block";
-};
+window.onload = function() {
+    modal.style.display = "block";
+}
 
-randomPlacingButton.onclick = function () {
-  modal.style.display = "none";
-};
+randomPlacingButton.onclick = function() {
+    modal.style.display = "none";
+}
 
-restartButton.onclick = function () {
+restartButton.onclick = function() {
   modal.style.display = "block";
-};
+}
 
 window.onclick = function(event) {
   if (event.target == modalRulesContainer) {
@@ -886,9 +880,9 @@ window.onclick = function(event) {
   }
 }
 
-manualPlacingButton.onclick = function () {
-  modal.style.display = "none";
-};
+manualPlacingButton.onclick = function() {
+    modal.style.display = "none";
+}
 
 rulesButton.onclick = function() {
   
@@ -924,3 +918,4 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.style.display = "none";
   });
 });
+
