@@ -843,7 +843,7 @@ let manual = false;
 let allShipsPlaced = true;
 
 manualPlacingButton.addEventListener("click", () => {
-  startButton.classList.add('hidden')
+  // startButton.classList.add('hidden')
   if (game) {
     game.stop();
   }
@@ -852,6 +852,7 @@ manualPlacingButton.addEventListener("click", () => {
 
   game = new Game(manual, allShipsPlaced, shipLengths, fieldSize);
   currentTurn.textContent = 'Place your first ship';
+  startButton.classList.add('hidden')
 })
 
 randomPlacingButton.addEventListener("click", () => {
