@@ -48,10 +48,7 @@ h1 {
   font-size: 2em;
   color: #00008b;
   margin-bottom: 20px;
-}
-
-#current-turn {
-  margin-bottom: 20px;
+  min-width: 750px;
 }
 
 #game-container {
@@ -125,7 +122,6 @@ button {
   font-family: "Hand Drawn Shapes", sans-serif;
   cursor: pointer;
   font-weight: bold;
-  margin: 0 10px;
 }
 
 .music {
@@ -160,6 +156,7 @@ button {
 }
 
 /* List of enemy ships */
+
 .ships-list {
   position: relative;
   display: flex;
