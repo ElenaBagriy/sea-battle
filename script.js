@@ -880,6 +880,12 @@ restartButton.onclick = function () {
   modal.style.display = "block";
 };
 
+window.onclick = function(event) {
+  if (event.target == modalRulesContainer) {
+    modalRulesContainer.style.display = "none";
+  }
+}
+
 manualPlacingButton.onclick = function () {
   modal.style.display = "none";
 };
