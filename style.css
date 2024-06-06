@@ -79,8 +79,8 @@ h1 {
 }
 
 /* .cell { */
-  /* border: 1px solid #d0dfe2; */
-  /* background-color: #EFF8FF; */
+/* border: 1px solid #d0dfe2; */
+/* background-color: #EFF8FF; */
 /* } */
 
 .cell.hide {
@@ -137,7 +137,7 @@ button {
   gap: 0.5rem;
 }
 
-.ship.visible{
+.ship.visible {
   background-color: #6495ed;
 }
 
@@ -226,8 +226,8 @@ button {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
@@ -235,8 +235,10 @@ button {
   margin: 15% auto;
   padding: 20px;
   width: 80%;
+  border-radius: 7px;
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2),
+    0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 }
-
 
 /* Nav menu */
 nav {
@@ -256,10 +258,45 @@ nav {
 
 .menu {
   display: none;
-  background-color: #686b6ecc;
-  padding: 10px;
+  background-color: #f3f3f3;
+  padding: 20px;
   position: absolute;
   z-index: 999;
   width: 400px;
   height: 500px;
+  transform-origin: top right;
+  animation: openMenu 0.5s forwards;
+  transform-style: preserve-3d;
+  transform: skew(-15deg) perspective(1000px) rotateY(-45deg);
+  box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.menu.show-menu {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 999;
+  width: 400px;
+  height: 500px;
+  background-image: url(./images/grid.png);
+  background-repeat: repeat;
+  background-color: #f0f8ff;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: 1em;
+  transform-origin: top right;
+  transform-style: preserve-3d;
+  box-shadow: -10px 10px 20px rgba(0, 0, 0, 0.1);
+  animation: openMenu 0.5s forwards;
+}
+
+@keyframes openMenu {
+  from {
+    transform: skew(-15deg) perspective(1000px) rotateY(-90deg);
+  }
+  to {
+    transform: skew(0deg) perspective(1000px) rotateY(0deg);
+  }
 }
