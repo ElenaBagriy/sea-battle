@@ -299,30 +299,6 @@ class Board {
     }
 
     this.element.insertAdjacentHTML("beforeend", html)
-
-    let numberMarkup = '<div class="number-row">';
-
-    for (let n = 1; n <= 10; n++) {
-      numberMarkup += `<div>${n}</div>`;
-    }
-    numberMarkup += "</div>";
-
-    let letterMarkup = `<div class="letter-row">
-    <div>A</div>
-      <div>B</div>
-      <div>C</div>
-      <div>D</div>
-      <div>E</div>
-      <div>F</div>
-      <div>G</div>
-      <div>H</div>
-      <div>I</div>
-      <div>J</div>
-      </div>`;
-
-    // this.element.insertAdjacentHTML("beforeend", numberMarkup)
-    // this.element.insertAdjacentHTML("beforeend", letterMarkup)
-
   }
 
   handleShipPlacement(row, col) {
