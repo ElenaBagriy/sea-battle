@@ -67,7 +67,7 @@ const sfx = {
 function changeName(){
   let username = prompt("Enter your name");
   if (username === null || username === "") {
-    usernamePlace.innerHTML = "Player";
+    usernamePlace.textContent = "Player";
   } else {
     document.getElementById("username-place").innerHTML = username;
   }
@@ -431,6 +431,13 @@ class Game {
     this.manualPlacingEnabled = false;
     this.removeListeners();
     clearAllTimeouts();
+    playerScoreElement.textContent = `0/20`;
+    enemyScoreElement.textContent = `0/20`;
+    usernamePlace.textContent = "Player";
+    const shipListElements = document.querySelectorAll('span.icon-field.red-cross');
+    for (const el of shipListElements) {
+      el.remove();
+    }
   }
 
   start() {

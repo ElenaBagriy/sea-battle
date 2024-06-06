@@ -68,6 +68,11 @@ h1 {
   min-width: 750px;
 }
 
+h2 {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
 #game-container {
   display: flex;
   gap: 24px;
