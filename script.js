@@ -4,6 +4,7 @@ const playerScoreElement = document.querySelector(".player-score");
 const enemyScoreElement = document.querySelector(".enemy-score");
 const randomPlacingButton = document.getElementById("randomPlacingButton");
 const manualPlacingButton = document.getElementById("manualPlacingButton");
+const restartButton = document.getElementById("restartButton");
 const startButton = document.getElementById("start");
 const currentTurn = document.getElementById("current-turn");
 const usernamePlace = document.getElementById("username-place");
@@ -304,7 +305,7 @@ class Board {
     }
     if (this.ships.length === shipLengths.length) {
       currentTurn.textContent = 'You placed all ships!';
-      startButton.classList.remove('hidden')
+      startButton.classList.remove('hidden');
     }
  
   }
@@ -431,6 +432,7 @@ class Game {
       event.preventDefault();
       const row = parseInt(event.target.getAttribute("data-row"));
       const col = parseInt(event.target.getAttribute("data-col"));
+      this.playerBoard.handleShipPlacement(row, col);
       this.playerBoard.rotateShip(row, col);
     });
    
@@ -833,3 +835,40 @@ randomPlacingButton.addEventListener("click", () => {
 startButton.addEventListener('click',() => {
   game.start(true);
 })
+
+
+//Modal Window
+var modal = document.querySelector("#modalWindow");
+var span = document.getElementsByClassName("close")[0];
+
+window.onload = function() {
+    modal.style.display = "block";
+}
+
+randomPlacingButton.onclick = function() {
+    modal.style.display = "none";
+}
+
+restartButton.onclick = function() {
+  modal.style.display = "block";
+}
+
+manualPlacingButton.onclick = function() {
+    modal.style.display = "none";
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('menu');
+  const button = document.querySelectorAll('button');
+
+  burger.addEventListener('click', () => {
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  });
+
+  button.forEach(button => {
+    button.addEventListener('click', () => {
+      menu.style.display = 'none';
+    });
+  });
+});
