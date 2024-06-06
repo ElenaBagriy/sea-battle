@@ -21,6 +21,7 @@ a {
 }
 
 /* End Global rule */
+
 body {
   font-family: "Hand Drawn Shapes", sans-serif;
   background-image: url("./images/natural-wood-texture-brown-surface-wooden-table_84485-547.png");
@@ -45,11 +46,11 @@ main {
   background-repeat: repeat;
   background-color: #f0f8ff;
   text-align: center;
-  width: 1100px;
-  height: 650px;
+  width: 1125px;
+  height: 630px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   padding: 1em;
-  padding-left: 29px;
+  padding-left: 62px;
 }
 
 h1 {
@@ -66,9 +67,43 @@ h2 {
 
 #game-container {
   display: flex;
-  gap: 24px;
+  gap: 24px; 
   margin: 1em auto;
   flex-direction: row;
+}
+
+section {
+  position: relative;
+}
+
+.number-row {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  justify-content: center;
+  align-items: flex-end;
+  width: 330px;
+  height: 33px;
+  left: 0px;
+  bottom: 340px;
+  font-family: "Caveat", cursive;
+  font-size: 18px ;
+  font-weight: 700;
+}
+
+.letter-row {
+  position: absolute;
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  justify-content: flex-end;
+  align-items: center;
+  width: 33px;
+  height: 330px;
+  left: -38px;
+  bottom: 5px;
+  font-family: "Caveat", cursive;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .board {
@@ -85,18 +120,13 @@ h2 {
   z-index: 500;
 }
 
+.player-board {
+  margin-right: 32px;
+}
+
 .row {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-}
-
-/* .cell { */
-/* border: 1px solid #d0dfe2; */
-/* background-color: #EFF8FF; */
-/* } */
-
-.cell.hide {
-  background-color: rgb(198, 203, 205);
 }
 
 .cell.hit {
@@ -153,10 +183,6 @@ button {
   gap: 0.5rem;
 }
 
-.ship.visible {
-  background-color: #6495ed;
-}
-
 .ship-bordered {
   position: absolute;
   height: 35px;
@@ -178,7 +204,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-top: 68px;
+  margin-top: 69px;
   width: 30%;
 }
 
@@ -287,7 +313,6 @@ nav {
 .burger {
   font-size: 30px;
   cursor: pointer;
-  /* background-color: #dac0a3; */
   color: #ffffff;
   position: absolute;
   z-index: 8000;
@@ -346,34 +371,3 @@ nav {
   cursor: url("images/Cursor.png") 10 10, auto;
 }
 
-section {
-  position: relative;
-}
-
-.number-row {
-  position: absolute;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  justify-content: center;
-  align-items: flex-end;
-  width: 330px;
-  height: 33px;
-  left: 0px;
-  bottom: 340px;
-  font-size: 18px ;
-  font-style: italic;
-}
-
-.letter-row {
-  position: absolute;
-  display: grid;
-  grid-template-rows: repeat(10, 1fr);
-  justify-content: flex-end;
-  align-items: center;
-  width: 33px;
-  height: 330px;
-  left: -38px;
-  bottom: 5px;
-  font-size: 18px ;
-  font-style: italic;
-}
