@@ -12,6 +12,9 @@ const shipsListElement = document.querySelector(".ships-list");
 const soundsElement = document.querySelector(".sounds");
 const modal = document.querySelector("#modalWindow");
 const modalText = document.querySelector("#modal-text");
+const rulesButton = document.querySelector("#rules");
+const modalRules = document.querySelector("#modalRules");
+const modalRulesContainer = document.querySelector("#modalRulesContainer");
 
 let sounds = false;
 
@@ -880,6 +883,15 @@ restartButton.onclick = function () {
 manualPlacingButton.onclick = function () {
   modal.style.display = "none";
 };
+
+rulesButton.onclick = function() {
+  
+  if (modalRulesContainer.style.display === "none" || modalRulesContainer.style.display === "") {
+    modalRulesContainer.style.display = "block";
+  } else {
+    modalRulesContainer.style.display = "none";
+  }
+}
 
 // updated the block about showing menu just to get styling the menu
 document.addEventListener("DOMContentLoaded", () => {
