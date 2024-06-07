@@ -843,7 +843,7 @@ let manual = false;
 let allShipsPlaced = true;
 
 manualPlacingButton.addEventListener("click", () => {
-  // startButton.classList.add('hidden')
+  startButton.classList.add('hidden')
   if (game) {
     game.stop();
   }
@@ -855,6 +855,10 @@ manualPlacingButton.addEventListener("click", () => {
   startButton.classList.add('hidden')
 })
 
+startButton.addEventListener('click',() => {
+  game.start(true);
+  startButton.classList.add('hidden')
+})
 randomPlacingButton.addEventListener("click", () => {
   startButton.classList.add('hidden')
   modal.style.display = "none";
@@ -867,9 +871,6 @@ randomPlacingButton.addEventListener("click", () => {
   game = new Game(manual, allShipsPlaced, shipLengths, fieldSize);
 })
 
-startButton.addEventListener('click',() => {
-  game.start(true);
-})
 
 
 //Modal Window
